@@ -5,13 +5,13 @@
  */
 package ui;
 
-import gamecore.Food;
 import gamecore.GameController;
-import gamecore.Item;
-import gamecore.ItemType;
-import gamecore.Material;
 import gamecore.Reference;
-import gamecore.Weapon;
+import gamecore.item.Food;
+import gamecore.item.Item;
+import gamecore.item.ItemType;
+import gamecore.item.Material;
+import gamecore.item.Weapon;
 
 import java.util.Random;
 import java.util.Scanner;

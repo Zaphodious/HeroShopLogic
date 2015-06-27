@@ -1,4 +1,7 @@
-package gamecore;
+package gamecore.item;
+
+import gamecore.Reference;
+import gamecore.entity.Entity;
 
 public class Food extends Item {
 

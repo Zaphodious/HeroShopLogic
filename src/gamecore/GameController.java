@@ -1,5 +1,7 @@
 package gamecore;
 
+import gamecore.entity.Hero;
+
 import java.util.ArrayList;
 import java.util.List;
 

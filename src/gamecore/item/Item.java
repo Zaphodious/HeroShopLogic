@@ -1,4 +1,7 @@
-package gamecore;
+package gamecore.item;
+
+import gamecore.Reference;
+import gamecore.entity.Entity;
 
 /**
  * Created by achyt_000 on 6/24/2015.

@@ -1,4 +1,6 @@
-package gamecore;
+package gamecore.location;
+
+import gamecore.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,8 @@
-package gamecore;
+package gamecore.entity;
+
+import gamecore.Inventory;
+import gamecore.Reference;
+import gamecore.item.Weapon;
 
 import java.util.ArrayList;
 import java.util.Arrays;

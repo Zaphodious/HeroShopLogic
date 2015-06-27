@@ -1,4 +1,4 @@
-package gamecore;
+package gamecore.entity;
 
 /**
  * Created by achyt_000 on 6/24/2015.

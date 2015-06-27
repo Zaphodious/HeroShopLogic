@@ -1,4 +1,5 @@
-package gamecore;
+package gamecore.item;
+
 
 public class Material extends Item {
     

@@ -1,5 +1,8 @@
 package gamecore;
 
+import gamecore.item.Item;
+import gamecore.item.ItemType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +47,7 @@ public class Inventory {
     public int numberOfItems(ItemType type) {
 	int toReturn = 0;
 	for (Item item : storage.values()) {
-	    if (item.type == type) {
+	    if (item.getType() == type) {
 		toReturn++;
 	    }
 	}
@@ -55,7 +58,7 @@ public class Inventory {
 	Item[] toReturn = new Item[this.numberOfItems(type)];
 	int counter = 0;
 	for (Item item : storage.values()) {
-	    if (item.type == type) {
+	    if (item.getType() == type) {
 		toReturn[counter] = item;
 		counter++;
 	    }

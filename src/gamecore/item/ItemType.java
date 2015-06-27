@@ -1,4 +1,4 @@
-package gamecore;
+package gamecore.item;
 
 public enum ItemType {
 
