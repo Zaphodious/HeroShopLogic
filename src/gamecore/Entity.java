@@ -18,12 +18,19 @@ public abstract class Entity {
 
     protected Weapon weapon;
 
-    protected List<Item> inventory;
+    protected Inventory inventory;
+    
+    protected boolean invulnerable;
+
+    
+    
 
     protected Entity(String name, Map<Attribute, Integer> stats) {
 	this.name = name;
 	this.stats = stats;
-	inventory = new ArrayList<Item>();
+	this.invulnerable = false;
+	this.weapon = new Weapon("Fists Of Fury", 1, 0);
+	inventory = new Inventory();
     }
 
     protected Entity(String name, int... newStats) {
@@ -31,7 +38,7 @@ public abstract class Entity {
     }
 
     protected Entity(String name, int experience) {
-
+	this(name, StatMaker.makeAttributeMap(Reference.rand, experience));
     }
 
     protected Entity(String name) {
@@ -60,14 +67,30 @@ public abstract class Entity {
 	return stats;
     }
 
-    public boolean addToInventory(Item item) {
-	if (inventory.contains(item)) {
-	    inventory.get(inventory.indexOf(item)).addToStack(item.getStackSize());
-	} else {
-	    inventory.add(item);
-	}
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
 
-	return true;
+    public void setInvulnerable(boolean invulnerable) {
+        this.invulnerable = invulnerable;
+    }
+
+    public boolean feed(int hungerToAdd) {
+	if (this.getAttribute(Attribute.MAX_HUNGER) < hungerToAdd + this.getAttribute(Attribute.CURRENT_HUNGER)) {
+	    this.changeAttribute(Attribute.CURRENT_HUNGER, hungerToAdd);
+	    return true;
+	}
+	
+	return false;
+    }
+    
+    public boolean heal(int healthToAdd) {
+	if (this.getAttribute(Attribute.MAX_HEALTH) < healthToAdd + this.getAttribute(Attribute.CURRENT_HEALTH)) {
+	    this.changeAttribute(Attribute.CURRENT_HEALTH, healthToAdd);
+	    return true;
+	}
+	
+	return false;
     }
 
     public void setName(String name) {
@@ -75,12 +98,14 @@ public abstract class Entity {
     }
 
     public void equipWeapon(Weapon weapon) {
-	if (this.weapon != null)
-	    this.addToInventory(this.weapon);
+	if (this.weapon != null) {
+	    inventory.addItem(this.weapon);
+	}
 	this.weapon = weapon;
+	this.getInventory().removeItem(weapon);
     }
 
-    public List<Item> getInventory() {
+    public Inventory getInventory() {
 	return inventory;
     }
 
@@ -100,13 +125,22 @@ public abstract class Entity {
 	return thisGuy.toString();
     }
 
-    public void hurt(int amount) {
-	this.stats.put(Attribute.CURRENT_HEALTH, this.stats.get(Attribute.CURRENT_HEALTH) - amount);
+    public int hurt(int amount) {
+	
+	int toReturn = (this.isInvulnerable()) ? 0:amount;
+	this.changeAttribute(Attribute.CURRENT_HEALTH, -amount);
+	return toReturn;
     }
 
     public void makeAttackOn(Entity entity) {
 
-	entity.hurt(this.weapon.getPower());
+	this.getWeapon().use(entity);
+    }
+
+    
+    
+    private Weapon getWeapon() {
+        return weapon;
     }
 
     public void rename(String newName) {

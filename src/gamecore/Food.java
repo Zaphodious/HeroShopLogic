@@ -2,14 +2,29 @@ package gamecore;
 
 public class Food extends Item {
 
+    
     public Food(String name) {
-	super(name);
-	// TODO Auto-generated constructor stub
+	super(name, ItemType.FOOD);
     }
 
     public Food(String name, int quantity) {
-	super(name, quantity);
-	// TODO Auto-generated constructor stub
+	super(name, quantity, ItemType.FOOD);
+    }
+    
+    public Food(String name, int quantity, int potency) {
+	super(name, quantity, Reference.DEFAULT_MAX_STACK_SIZE, true, ItemType.FOOD, potency);
+    }
+    
+
+    @Override
+    public boolean use(Entity entity) {
+	entity.feed(this.getPotency());
+	return true;
+    }
+    
+    @Override
+    public String toString() {
+	return name + ": , stackSize=" + stackSize + ", maxStackSize=" + maxStackSize + "potency=" + potency;
     }
 
 }

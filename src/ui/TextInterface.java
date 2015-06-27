@@ -8,9 +8,11 @@ package ui;
 import gamecore.Food;
 import gamecore.GameController;
 import gamecore.Item;
+import gamecore.ItemType;
+import gamecore.Material;
 import gamecore.Reference;
+import gamecore.Weapon;
 
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -112,8 +114,9 @@ public class TextInterface {
 	System.out.println(this.breakSpace);
 	String command = "";
 	while (true) {
+	    Item[] playerInventory = this.controller.getPlayerCharacter().getInventory().getItems();
 	    System.out.println("Inventory Menu. Please select from the following:");
-	    System.out.println("1:View inventory, 2:Add test data, 3:Remove Item, 4:Return to main menu");
+	    System.out.println("1:View inventory, 2:Add test data, 3:Remove Item, 4:Equip Weapon, 5:Return to main menu");
 	    System.out.print(">");
 
 	    command = scanner.nextLine();
@@ -122,36 +125,82 @@ public class TextInterface {
 	    case "1":
 		System.out.println("The hero's inventory:");
 
-		if (this.controller.getPlayerCharacter().getInventory().isEmpty()) {
+		if (playerInventory.length == 0) {
 		    System.out.println("The inventory is empty");
 		} else {
-		    int count = 1;
-		    for (Item item : this.controller.getPlayerCharacter().getInventory()) {
-			System.out.println(count + ": " + item.toString());
-			count++;
+		    int counter = 0;
+		    System.out.println("player inventory has " + playerInventory.length + " items in it.");
+		    for (Item item : playerInventory) {
+
+			System.out.println(counter + 1 + ": " + item.toString());
+			counter++;
 		    }
+
+		    /*
+		     * for (int i = 0; i < playerInventory.length; i++) { try {
+		     * System.out.println(i+1 + ": " +
+		     * playerInventory[i].toString()); } catch (Exception e) {
+		     * // TODO Auto-generated catch block e.printStackTrace(); }
+		     * }
+		     */
 		}
 
 		break;
 	    case "2":
 		System.out.println("Adding a whole mess of items!");
-		this.controller.getPlayerCharacter().addToInventory(new Food("Cheese, Bowl of Cottage", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().addToInventory(new Food("Wood", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().addToInventory(new Food("Random Crafting Item", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().addToInventory(new Food("Cheese, Cheddar", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().addToInventory(new Food("Vanilla Beans", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().addToInventory(new Food("Pile of Shiny Rocks", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().addToInventory(new Food("Funky-Smelling Cloth", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Cheese, Bowl of Cottage", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Wood", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Random Crafting Item", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Cheese, Cheddar", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Vanilla Beans", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Pile of Shiny Rocks", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Funky-Smelling Cloth", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Battle Axe", rand.nextInt(12), 64));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Long Sword", rand.nextInt(12), 64));
 		break;
 	    case "3":
-		System.out.println("At which position?");
-		System.out.println(">");
-		int itemIndex = Integer.parseInt(scanner.nextLine());
-		itemIndex--;
-		this.controller.getPlayerCharacter().getInventory().remove(itemIndex);
+
+		while (true) {
+		    try {
+			System.out.println("At which position?");
+			System.out.println(">");
+			int itemIndex = Integer.parseInt(scanner.nextLine());
+			itemIndex--;
+			this.controller.getPlayerCharacter().getInventory().removeItem(playerInventory[itemIndex]);
+			break;
+		    } catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Sorry, that didn't work. Please enter a value between 1 and " + this.controller.getPlayerCharacter().getInventory().getItems().length);
+		    }
+		}
+		System.out.println("Item successfully removed.");
 
 		break;
 	    case "4":
+		System.out.println("Weapons:");
+		if (this.controller.getPlayerCharacter().getInventory().getItems(ItemType.WEAPON).length == 0) {
+		    System.out.println("The inventory is empty");
+		} else {
+		    int count = 1;
+		    for (Item item : this.controller.getPlayerCharacter().getInventory().getItems(ItemType.WEAPON)) {
+			System.out.println(count + ": " + item.toString());
+			count++;
+		    }
+
+		    System.out.println("Which weapon do you want to equip?");
+		    try {
+			System.out.println(">");
+			int itemIndex = Integer.parseInt(scanner.nextLine());
+			itemIndex--;
+			this.controller.getPlayerCharacter().equipWeapon((Weapon) this.controller.getPlayerCharacter().getInventory().getItems(ItemType.WEAPON)[itemIndex]);
+			break;
+		    } catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Sorry, that didn't work. Please enter a value between 1 and " + this.controller.getPlayerCharacter().getInventory().getItems().length);
+		    }
+		}
+		break;
+	    case "5":
 		System.out.println("Returning you to the main menu.");
 		return;
 	    default:
