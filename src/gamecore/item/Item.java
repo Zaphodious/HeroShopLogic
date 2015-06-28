@@ -1,12 +1,14 @@
 package gamecore.item;
 
+import gamecore.Scene;
 import gamecore.Reference;
 import gamecore.entity.Entity;
+import gamecore.location.Encounter;
 
 /**
  * Created by achyt_000 on 6/24/2015.
  */
-public abstract class Item {
+public abstract class Item implements Encounter {
 
     protected String name;
     protected ItemType type;
@@ -24,12 +26,11 @@ public abstract class Item {
     protected Item(String name, int stackSize, ItemType type) {
 	this(name, stackSize, Reference.DEFAULT_MAX_STACK_SIZE, true, type, 3);
     }
-    
 
     protected Item(String name, int stackSize, int maxStackSize, boolean stackable, ItemType type, int potency) {
 	this(name, stackSize, Reference.DEFAULT_MAX_STACK_SIZE, true, type, 3, 2);
     }
-    
+
     protected Item(String name, int stackSize, int maxStackSize, boolean stackable, ItemType type, int potency, int weight) {
 	this.name = name;
 	this.stackSize = stackSize;
@@ -39,7 +40,25 @@ public abstract class Item {
 	this.potency = potency;
 	this.weight = weight;
     }
+
+    @Override
+    public char getSymbol() {
+	return this.type.getSymbol();
+    }
+
+    @Override
+    public boolean canBePickedUp() {
+	return true;
+    }
     
+    
+
+    @Override
+    public Scene getEvent() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
     public boolean isStackable() {
 	return stackable;
     }
@@ -59,23 +78,24 @@ public abstract class Item {
     public String getName() {
 	return name;
     }
-    
+
     public ItemType getType() {
 	return this.type;
     }
-    
+
     public boolean use(Entity entity) {
 	return false;
     }
-    
-    
+
+    public void use(Entity... entities) {
+    }
 
     public int getPotency() {
-        return potency;
+	return potency;
     }
 
     protected void setPotency(int potency) {
-        this.potency = potency;
+	this.potency = potency;
     }
 
     @Override
@@ -93,5 +113,5 @@ public abstract class Item {
     public String toString() {
 	return name + ": , stackSize=" + stackSize + ", maxStackSize=" + maxStackSize;
     }
-    
+
 }

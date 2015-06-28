@@ -211,7 +211,50 @@ public class TextInterface {
     }
 
     public void adventure() {
+	System.out.println(this.breakSpace);
+	/*
+	while (true) {
+	    System.out.println("Adventure! This is the map:");
+	    String[] gameMap = this.controller.getArea().getMap();
+	    
+	    for (String string : gameMap) {
+		System.out.println(string);
+	    }
+	    
+	    System.out.println();
+	    
+	    
+	    
+	    System.out.println("1:View Hero, 2:Change Hero Name, 3:Re-Roll Hero, 4:Return to main menu");
+	    System.out.print(">");
+	    String command = scanner.nextLine();
 
+	    switch (command) {
+	    case "1":
+		System.out.println("Your Hero:");
+		System.out.println(controller.getPlayerCharacter().toString());
+		break;
+	    case "2":
+		System.out.println("What should the hero's name be?");
+		System.out.print(">");
+		this.controller.nameThePlayer(scanner.nextLine());
+		break;
+	    case "3":
+		System.out.println("Making a new hero!");
+		System.out.println("What should the hero's name be?");
+		System.out.print(">");
+		this.controller.reRoll(scanner.nextLine());
+		break;
+	    case "4":
+		System.out.println("Return to main menu");
+		System.out.println(this.breakSpace);
+		return;
+	    default:
+		System.out.println("Sorry, that's not a valid command.");
+		break;
+	    }
+	    break;
+	}*/
     }
 
     public void manageShop() {

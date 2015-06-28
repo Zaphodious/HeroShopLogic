@@ -30,13 +30,21 @@ public class Weapon extends Item {
 	return super.hashCode() + salt;
     }
     
-    
+    private boolean sliceNDice(Entity entity, int damageToDeal) {
+	return (entity.hurt(damageToDeal) == 0) ? false:true;
+    }
 
     @Override
     public boolean use(Entity entity) {
-	int damageDone = entity.hurt(this.getPotency());
-	
-	return (damageDone == 0) ? false:true;
+	return this.sliceNDice(entity, this.getPotency());
+    }
+    
+    @Override
+    public void use(Entity... entities) {
+	int damageToDeal = this.getPotency() / entities.length;
+	for (Entity entity : entities){
+	    this.sliceNDice(entity, damageToDeal);
+	}
     }
 
     @Override

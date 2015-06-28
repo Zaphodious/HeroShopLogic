@@ -3,8 +3,9 @@ package gamecore.entity;
 import gamecore.Inventory;
 import gamecore.Reference;
 import gamecore.item.Weapon;
+import gamecore.location.Icon;
+import gamecore.location.Encounter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -25,28 +26,39 @@ public abstract class Entity {
     protected Inventory inventory;
     
     protected boolean invulnerable;
-
     
-    
+    protected int salt;
 
-    protected Entity(String name, Map<Attribute, Integer> stats) {
+    protected EntityType type;
+    
+    protected Entity(String name, Map<Attribute, Integer> stats, EntityType type) {
+	this(name,stats,type,0);
+    }
+    
+    protected Entity(String name, Map<Attribute, Integer> stats, EntityType type, int salt) {
 	this.name = name;
 	this.stats = stats;
 	this.invulnerable = false;
-	this.weapon = new Weapon("Fists Of Fury", 1, 0);
+	this.weapon = new Weapon("Fists Of Fury", 1, -1);
 	inventory = new Inventory();
+	this.type = type;
+	this.salt = (salt==0) ? Reference.rand.nextInt():salt;
+    }
+    
+    protected Entity(String name, EntityType type) {
+	this(name, StatMaker.makeAttributeMap(Reference.rand,1), type);
     }
 
-    protected Entity(String name, int... newStats) {
-	this(name, StatMaker.makeAttributeMap(newStats));
+    protected Entity(String name, EntityType type, int... newStats) {
+	this(name, StatMaker.makeAttributeMap(newStats), type);
     }
 
-    protected Entity(String name, int experience) {
-	this(name, StatMaker.makeAttributeMap(Reference.rand, experience));
+    protected Entity(String name, int experience, EntityType type) {
+	this(name, StatMaker.makeAttributeMap(Reference.rand, experience), type);
     }
-
-    protected Entity(String name) {
-	this(name, StatMaker.makeAttributeMap(Reference.rand));
+    
+    public char getSymbol() {
+        return this.type.getSymbol();
     }
 
     public boolean addAttribute(Attribute attribute, int value) {
@@ -136,9 +148,15 @@ public abstract class Entity {
 	return toReturn;
     }
 
-    public void makeAttackOn(Entity entity) {
+    public void attack(Entity entity) {
 
 	this.getWeapon().use(entity);
+    }
+    
+    public void attack(Entity... entities) {
+	for (Entity entity : entities) {
+	    this.attack(entity);
+	}
     }
 
     
@@ -184,7 +202,7 @@ class StatMaker {
     public static Map<Attribute, Integer> makeAttributeMap(Random rand, int experience) {
 	int[] values = new int[Attribute.values().length];
 	for (int i = 0; i < Attribute.values().length; i++) {
-	    values[i] = rand.nextInt((Reference.WHAT_LEVEL(experience) + 7) * 2) + (Reference.WHAT_LEVEL(experience));
+	    values[i] = rand.nextInt((Reference.WHAT_LEVEL(experience) + 7) * 2) + (Reference.WHAT_LEVEL(experience) + 1);
 	}
 
 	return makeAttributeMap(values);

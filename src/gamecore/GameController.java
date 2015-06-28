@@ -1,6 +1,10 @@
 package gamecore;
 
+import gamecore.entity.EntityType;
 import gamecore.entity.Hero;
+import gamecore.entity.Monster;
+import gamecore.location.Area;
+import gamecore.location.Group;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +19,8 @@ public class GameController {
     private List<Hero> employees;
 
     public GameController() {
-	playerCharacter = new Hero("Marco");
-	setSideKick(new Hero("Zabroni"));
+	playerCharacter = new Hero("Marco", EntityType.PLAYER_CHARACTER);
+	setSideKick(new Hero("Zabroni",EntityType.SIDEKICK));
 	setEmployees(new ArrayList<Hero>());
     }
 
@@ -49,7 +53,9 @@ public class GameController {
     }
 
     public void reRoll(String name) {
-	this.playerCharacter = new Hero(name);
+	this.playerCharacter = new Hero(name, EntityType.PLAYER_CHARACTER);
     }
 
+
+    
 }

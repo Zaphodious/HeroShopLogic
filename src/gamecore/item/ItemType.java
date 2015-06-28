@@ -2,26 +2,29 @@ package gamecore.item;
 
 public enum ItemType {
 
-    FOOD("food"),
-    WEAPON("weapon"),
-    ARMOR("armor"),
-    MATERIAL("material");
+    FOOD('%',"food"),
+    WEAPON('^',"weapon"),
+    ARMOR('>',"armor"),
+    MATERIAL('~',"material");
     
     
     
+    private char symbol;
     private String name;
     
-    ItemType(String name) {
-	this.setName(name);
+    ItemType(char symbol, String name) {
+	this.name = name;
+	this.symbol = symbol;
     }
 
     public String getName() {
 	return name;
     }
 
-    private void setName(String name) {
-	this.name = name;
+    public char getSymbol() {
+        return symbol;
     }
+
     
     
     
