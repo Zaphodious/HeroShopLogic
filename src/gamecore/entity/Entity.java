@@ -3,14 +3,12 @@ package gamecore.entity;
 import gamecore.Inventory;
 import gamecore.Reference;
 import gamecore.item.Weapon;
-import gamecore.location.Icon;
-import gamecore.location.Encounter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Created by achyt_000 on 6/24/2015.
@@ -24,41 +22,37 @@ public abstract class Entity {
     protected Weapon weapon;
 
     protected Inventory inventory;
-    
+
     protected boolean invulnerable;
-    
+
     protected int salt;
 
     protected EntityType type;
-    
+
     protected Entity(String name, Map<Attribute, Integer> stats, EntityType type) {
-	this(name,stats,type,0);
+	this(name, stats, type, 0);
     }
-    
+
     protected Entity(String name, Map<Attribute, Integer> stats, EntityType type, int salt) {
 	this.name = name;
 	this.stats = stats;
 	this.invulnerable = false;
 	this.weapon = new Weapon("Fists Of Fury", 1, -1);
-	inventory = new Inventory();
+	inventory = new Inventory((stats.get(Attribute.ATK_STRENGTH) + stats.get(Attribute.DEF_STRENGTH)) / 2);
 	this.type = type;
-	this.salt = (salt==0) ? Reference.rand.nextInt():salt;
-    }
-    
-    protected Entity(String name, EntityType type) {
-	this(name, StatMaker.makeAttributeMap(Reference.rand,1), type);
+	this.salt = (salt == 0) ? Reference.rand.nextInt() : salt;
     }
 
-    protected Entity(String name, EntityType type, int... newStats) {
-	this(name, StatMaker.makeAttributeMap(newStats), type);
+    protected Entity(String name, EntityType type) {
+	this(name, StatMaker.makeAttributeMap(true), type);
     }
 
     protected Entity(String name, int experience, EntityType type) {
-	this(name, StatMaker.makeAttributeMap(Reference.rand, experience), type);
+	this(name, StatMaker.makeAttributeMap(true, experience), type);
     }
-    
+
     public char getSymbol() {
-        return this.type.getSymbol();
+	return this.type.getSymbol();
     }
 
     public boolean addAttribute(Attribute attribute, int value) {
@@ -84,11 +78,11 @@ public abstract class Entity {
     }
 
     public boolean isInvulnerable() {
-        return invulnerable;
+	return invulnerable;
     }
 
     public void setInvulnerable(boolean invulnerable) {
-        this.invulnerable = invulnerable;
+	this.invulnerable = invulnerable;
     }
 
     public boolean feed(int hungerToAdd) {
@@ -96,16 +90,16 @@ public abstract class Entity {
 	    this.changeAttribute(Attribute.CURRENT_HUNGER, hungerToAdd);
 	    return true;
 	}
-	
+
 	return false;
     }
-    
+
     public boolean heal(int healthToAdd) {
 	if (this.getAttribute(Attribute.MAX_HEALTH) < healthToAdd + this.getAttribute(Attribute.CURRENT_HEALTH)) {
 	    this.changeAttribute(Attribute.CURRENT_HEALTH, healthToAdd);
 	    return true;
 	}
-	
+
 	return false;
     }
 
@@ -129,6 +123,7 @@ public abstract class Entity {
     public String toString() {
 	StringBuilder thisGuy = new StringBuilder();
 	thisGuy.append("Character Name: " + this.name + "\n");
+	thisGuy.append("They can carry " + this.inventory.getMaxWeight() + "\n");
 	thisGuy.append("Character attributes: \n");
 	for (Attribute attribute : Attribute.values()) {
 	    thisGuy.append(attribute.getName().toUpperCase() + ": " + this.stats.get(attribute) + "\n");
@@ -142,8 +137,8 @@ public abstract class Entity {
     }
 
     public int hurt(int amount) {
-	
-	int toReturn = (this.isInvulnerable()) ? 0:amount;
+
+	int toReturn = (this.isInvulnerable()) ? 0 : amount;
 	this.changeAttribute(Attribute.CURRENT_HEALTH, -amount);
 	return toReturn;
     }
@@ -152,17 +147,15 @@ public abstract class Entity {
 
 	this.getWeapon().use(entity);
     }
-    
+
     public void attack(Entity... entities) {
 	for (Entity entity : entities) {
 	    this.attack(entity);
 	}
     }
 
-    
-    
     private Weapon getWeapon() {
-        return weapon;
+	return weapon;
     }
 
     public void rename(String newName) {
@@ -171,69 +164,52 @@ public abstract class Entity {
 }
 
 class StatMaker {
-    public static Map<Attribute, Integer> makeAttributeMap(int[] values) {
-	Map<Attribute, Integer> theseStats = new HashMap<Attribute, Integer>();
-	try {
 
-	    for (int i = 0; i < Attribute.values().length; i++) {
-		theseStats.put(Attribute.getAttributeForIndex(i), values[i]);
-	    }
-	} catch (Exception e) {
-	    System.out.println("You fool! You can't make a new Entity with less then " + (Attribute.values().length) + " attribute values!");
-	    e.printStackTrace();
+    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, List<Attribute> buffed, List<Attribute> nerfed) {
+	Map<Attribute, Integer> toReturn = new HashMap<Attribute, Integer>();
+	if (buffed == null) {
+	    buffed = new ArrayList<Attribute>();
 	}
-
-	return theseStats;
-    }
-
-    public static Map<Attribute, Integer> makeAttributeMap() {
-	return makeAttributeMap(makeBasicAttributeArray());
-    }
-
-    public static Map<Attribute, Integer> makeAttributeMap(Random rand) {
-	int[] values = new int[Attribute.values().length];
-	for (int i = 0; i < Attribute.values().length; i++) {
-	    values[i] = rand.nextInt(11) + 7;
+	if (nerfed == null) {
+	    nerfed = new ArrayList<Attribute>();
 	}
-
-	return makeAttributeMap(values);
-    }
-
-    public static Map<Attribute, Integer> makeAttributeMap(Random rand, int experience) {
-	int[] values = new int[Attribute.values().length];
-	for (int i = 0; i < Attribute.values().length; i++) {
-	    values[i] = rand.nextInt((Reference.WHAT_LEVEL(experience) + 7) * 2) + (Reference.WHAT_LEVEL(experience) + 1);
+	if (experience < 100) {
+	    experience = 100;
 	}
+	int level = Reference.WHAT_LEVEL(experience);
 
-	return makeAttributeMap(values);
-    }
-
-    public static Map<Attribute, Integer> makeAttributeMap(Random rand, int experience, Attribute... attributes) {
-	Map<Attribute, Integer> toReturn = makeAttributeMap(makeBasicAttributeArray());
-
-	List<Attribute> selected = Arrays.asList(attributes);
-
-	int thisLevel = Reference.WHAT_LEVEL(experience);
-
-	for (Attribute thisAttribute : Attribute.values()) {
-	    int newAttributeValue = toReturn.get(thisAttribute);
-	    if (selected.contains(thisAttribute)) {
-		newAttributeValue += (rand.nextInt(thisLevel * 2));
+	for (Attribute attribute : Attribute.values()) {
+	    int stat = (random) ? Reference.rand.nextInt(7) : 7;
+	    if (buffed.contains(attribute)) {
+		stat += level * 3;
+	    } else if (nerfed.contains(attribute)) {
+		stat += level / 2;
+	    } else if (attribute == Attribute.EXPERIENCE) {
+		stat = experience;
+	    } else if (attribute == Attribute.CURRENT_HEALTH) {
+		stat = toReturn.get(Attribute.MAX_HEALTH);
+	    } else if (attribute == Attribute.CURRENT_HUNGER) {
+		stat = toReturn.get(Attribute.MAX_HUNGER);
+	    } else if (attribute == Attribute.CURRENT_MAGIC_POINTS) {
+		stat = toReturn.get(Attribute.MAX_MAGIC_POINTS);
 	    } else {
-		newAttributeValue += (rand.nextInt(thisLevel * 2) - (thisLevel / 2));
+		stat += level;
 	    }
-	    toReturn.put(thisAttribute, newAttributeValue);
+	    toReturn.put(attribute, stat);
 	}
-
 	return toReturn;
     }
 
-    private static int[] makeBasicAttributeArray() {
-	int[] values = new int[Attribute.values().length];
-	for (int i = 0; i < Attribute.values().length; i++) {
-	    values[i] = 7;
-	}
-	return values;
+    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, Attribute[] buffed, Attribute[] nerfed) {
+	return makeAttributeMap(random, experience, Arrays.asList(buffed), Arrays.asList(nerfed));
+    }
+
+    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience) {
+	return makeAttributeMap(random, experience, new ArrayList<Attribute>(), new ArrayList<Attribute>());
+    }
+    
+    public static Map<Attribute, Integer> makeAttributeMap(boolean random) {
+	return makeAttributeMap(random, 100, new ArrayList<Attribute>(), new ArrayList<Attribute>());
     }
 
 }

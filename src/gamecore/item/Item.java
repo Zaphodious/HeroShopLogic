@@ -1,14 +1,12 @@
 package gamecore.item;
 
-import gamecore.Scene;
 import gamecore.Reference;
 import gamecore.entity.Entity;
-import gamecore.location.Encounter;
 
 /**
  * Created by achyt_000 on 6/24/2015.
  */
-public abstract class Item implements Encounter {
+public abstract class Item implements Cloneable {
 
     protected String name;
     protected ItemType type;
@@ -41,22 +39,9 @@ public abstract class Item implements Encounter {
 	this.weight = weight;
     }
 
-    @Override
+
     public char getSymbol() {
 	return this.type.getSymbol();
-    }
-
-    @Override
-    public boolean canBePickedUp() {
-	return true;
-    }
-    
-    
-
-    @Override
-    public Scene getEvent() {
-	// TODO Auto-generated method stub
-	return null;
     }
 
     public boolean isStackable() {
@@ -69,6 +54,7 @@ public abstract class Item implements Encounter {
 
     public void addToStack(int value) {
 	stackSize += value;
+	this.weight += (weight*value);
     }
 
     public void addToStack() {
@@ -114,4 +100,20 @@ public abstract class Item implements Encounter {
 	return name + ": , stackSize=" + stackSize + ", maxStackSize=" + maxStackSize;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+	// TODO Auto-generated method stub
+	return super.clone();
+    }
+
+    
+    
 }

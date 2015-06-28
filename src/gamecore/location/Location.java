@@ -1,7 +1,11 @@
 package gamecore.location;
 
-public class Location {
+import java.util.List;
 
+public abstract class Location {
+
+    private List<Area> areas;
+    private String name;
     
     
 }

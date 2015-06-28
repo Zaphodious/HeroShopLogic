@@ -129,7 +129,7 @@ public class TextInterface {
 		    System.out.println("The inventory is empty");
 		} else {
 		    int counter = 0;
-		    System.out.println("player inventory has " + playerInventory.length + " items in it.");
+		    System.out.println("player inventory has " + playerInventory.length + " items in it., and weighs " + this.controller.getPlayerCharacter().getInventory().getCurrentWeight());
 		    for (Item item : playerInventory) {
 
 			System.out.println(counter + 1 + ": " + item.toString());

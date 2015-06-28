@@ -1,5 +1,6 @@
 package gamecore.location;
 
+import gamecore.Inventory;
 import gamecore.Scene;
 import gamecore.entity.Entity;
 import gamecore.item.Item;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class Group implements Encounter {
 
     private Map<Integer, Entity> entities;
+    private Inventory toDrop;
 
     public Group() {
 	this.entities = new HashMap<Integer, Entity>();
@@ -60,9 +62,16 @@ public class Group implements Encounter {
     }
 
     @Override
-    public Scene getEvent() {
+    public boolean isHostileToPlayer() {
 	// TODO Auto-generated method stub
-	return null;
+	return false;
     }
+
+    @Override
+    public Inventory getInventory() {
+	return toDrop;
+    }
+
+
 
 }

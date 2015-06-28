@@ -1,6 +1,7 @@
 package gamecore.location;
 
-import gamecore.Scene;
+import gamecore.Inventory;
+import gamecore.entity.Entity;
 
 public interface Encounter {
 
@@ -8,5 +9,9 @@ public interface Encounter {
     
     public boolean canBePickedUp();
     
-    public Scene getEvent();
+    public boolean isHostileToPlayer();
+    
+    public Entity[] getEntities();
+    
+    public Inventory getInventory();
 }

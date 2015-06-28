@@ -1,5 +1,7 @@
 package gamecore;
 
+import gamecore.entity.Entity;
+
 import java.util.Random;
 
 /**
@@ -26,6 +28,15 @@ public class Reference {
 	}
 
 	return (deadLevel - victorLevel) + 3;
+    }
+
+    public static Entity[] concat(Entity[] a, Entity[] b) {
+	int aLen = a.length;
+	int bLen = b.length;
+	Entity[] c = new Entity[aLen + bLen];
+	System.arraycopy(a, 0, c, 0, aLen);
+	System.arraycopy(b, 0, c, aLen, bLen);
+	return c;
     }
 
 }

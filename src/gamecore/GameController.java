@@ -20,7 +20,7 @@ public class GameController {
 
     public GameController() {
 	playerCharacter = new Hero("Marco", EntityType.PLAYER_CHARACTER);
-	setSideKick(new Hero("Zabroni",EntityType.SIDEKICK));
+	setSideKick(new Hero("Zabroni", EntityType.SIDEKICK));
 	setEmployees(new ArrayList<Hero>());
     }
 
@@ -56,6 +56,4 @@ public class GameController {
 	this.playerCharacter = new Hero(name, EntityType.PLAYER_CHARACTER);
     }
 
-
-    
 }
