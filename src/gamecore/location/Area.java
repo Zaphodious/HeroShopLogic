@@ -1,6 +1,7 @@
 package gamecore.location;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Area {
@@ -15,8 +16,18 @@ public class Area {
 	this.experienceLevel = experienceLevel;
     }
     
-    public void addMapObject(Encounter mapObject) {
-	this.encounters.add(mapObject);
+    public Area(int experienceLevel, Encounter... encounters) {
+	this(experienceLevel);
+    }
+    
+    public void addEncounter(Encounter encounter) {
+	this.encounters.add(encounter);
+    }
+    
+    public void addEncounters(Encounter... encounters) {
+	for (Encounter encounter : encounters) {
+	    this.addEncounter(encounter);
+	}
     }
     
 }

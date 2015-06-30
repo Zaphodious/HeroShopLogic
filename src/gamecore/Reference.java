@@ -1,6 +1,7 @@
 package gamecore;
 
 import gamecore.entity.Entity;
+import gamecore.item.Weapon;
 
 import java.util.Random;
 
@@ -11,6 +12,7 @@ public class Reference {
 
     public static int DEFAULT_MAX_STACK_SIZE = 42000;
     public static Random rand = new Random();
+    public static Weapon DEFAULT_WEAPON	= new Weapon("Fists Of Fury", 1, -1);
 
     public static int WHAT_LEVEL(int experience) {
 	return experience / 100;

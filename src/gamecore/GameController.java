@@ -3,8 +3,8 @@ package gamecore;
 import gamecore.entity.EntityType;
 import gamecore.entity.Hero;
 import gamecore.entity.Monster;
-import gamecore.location.Area;
-import gamecore.location.Group;
+import gamecore.item.Weapon;
+import gamecore.location.Encounter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +54,14 @@ public class GameController {
 
     public void reRoll(String name) {
 	this.playerCharacter = new Hero(name, EntityType.PLAYER_CHARACTER);
+    }
+    
+    public Encounter randomEncounter() {
+	Monster goblin = new Monster("Goblin", 100, EntityType.GOBLIN);
+	goblin.equipWeapon(new Weapon("Axe", 2, 100));
+	Encounter toReturn = new Encounter(goblin, null, null, 0, new Weapon("Hatchet", 2, 100));
+	toReturn.setDisplayLine("You're fighting a Goblin! Rawr!");
+	return toReturn;
     }
 
 }

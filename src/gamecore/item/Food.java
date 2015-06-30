@@ -20,9 +20,9 @@ public class Food extends Item {
     
 
     @Override
-    public boolean use(Entity entity) {
+    public int use(Entity entity) {
 	entity.feed(this.getPotency());
-	return true;
+	return potency;
     }
     
     @Override

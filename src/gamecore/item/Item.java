@@ -13,9 +13,11 @@ public abstract class Item implements Cloneable {
 
     protected int stackSize;
     protected int maxStackSize;
-    protected boolean stackable;
     protected int potency;
     protected int weight;
+    
+    protected boolean stackable;
+    protected boolean combatUsable;
 
     protected Item(String name, ItemType type) {
 	this(name, 1, Reference.DEFAULT_MAX_STACK_SIZE, true, type, 3);
@@ -26,7 +28,7 @@ public abstract class Item implements Cloneable {
     }
 
     protected Item(String name, int stackSize, int maxStackSize, boolean stackable, ItemType type, int potency) {
-	this(name, stackSize, Reference.DEFAULT_MAX_STACK_SIZE, true, type, 3, 2);
+	this(name, stackSize, Reference.DEFAULT_MAX_STACK_SIZE, true, type, potency, 2);
     }
 
     protected Item(String name, int stackSize, int maxStackSize, boolean stackable, ItemType type, int potency, int weight) {
@@ -37,11 +39,6 @@ public abstract class Item implements Cloneable {
 	this.type = type;
 	this.potency = potency;
 	this.weight = weight;
-    }
-
-
-    public char getSymbol() {
-	return this.type.getSymbol();
     }
 
     public boolean isStackable() {
@@ -69,11 +66,8 @@ public abstract class Item implements Cloneable {
 	return this.type;
     }
 
-    public boolean use(Entity entity) {
-	return false;
-    }
-
-    public void use(Entity... entities) {
+    public int use(Entity entity) {
+	return 0;
     }
 
     public int getPotency() {
@@ -106,6 +100,16 @@ public abstract class Item implements Cloneable {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+    
+    
+
+    public boolean isCombatUsable() {
+        return combatUsable;
+    }
+
+    public void setCombatUsable(boolean combatUsable) {
+        this.combatUsable = combatUsable;
     }
 
     @Override

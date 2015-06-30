@@ -7,12 +7,18 @@ package ui;
 
 import gamecore.GameController;
 import gamecore.Reference;
+import gamecore.adventure.CombatCommand;
+import gamecore.adventure.Scene;
+import gamecore.entity.Attribute;
 import gamecore.item.Food;
+import gamecore.item.HealthPotion;
 import gamecore.item.Item;
 import gamecore.item.ItemType;
 import gamecore.item.Material;
 import gamecore.item.Weapon;
+import gamecore.location.Encounter;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -148,6 +154,9 @@ public class TextInterface {
 		break;
 	    case "2":
 		System.out.println("Adding a whole mess of items!");
+		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Battle Axe", rand.nextInt(12), 64));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Long Sword", rand.nextInt(12), 64));
+		this.controller.getPlayerCharacter().getInventory().addItem(new HealthPotion("Minor Health Potion", rand.nextInt(12), 4));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Cheese, Bowl of Cottage", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Wood", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Random Crafting Item", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
@@ -155,8 +164,7 @@ public class TextInterface {
 		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Vanilla Beans", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Pile of Shiny Rocks", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Funky-Smelling Cloth", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Battle Axe", rand.nextInt(12), 64));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Long Sword", rand.nextInt(12), 64));
+		
 		break;
 	    case "3":
 
@@ -212,49 +220,31 @@ public class TextInterface {
 
     public void adventure() {
 	System.out.println(this.breakSpace);
-	/*
-	while (true) {
-	    System.out.println("Adventure! This is the map:");
-	    String[] gameMap = this.controller.getArea().getMap();
-	    
-	    for (String string : gameMap) {
-		System.out.println(string);
+	Encounter encounter = this.controller.randomEncounter();
+	Scene scene = new Scene(this.controller.getPlayerCharacter(), encounter);
+	while(scene.stillOngoing()) {
+	    System.out.println("You went adventuring");
+	    System.out.println(scene.getEncounter().getDisplayLine());
+	    System.out.println("Enemy Health: " + scene.getEncounter().getEntityToFight().getAttribute(Attribute.CURRENT_HEALTH));
+	    System.out.println("Possible commands are:");
+	    List<CombatCommand> commands = scene.getCommands();
+	    for (int i = 0; i < commands.size(); i++) {
+		System.out.println(i+1 + ": " + commands.get(i).getCommand());
 	    }
 	    
-	    System.out.println();
-	    
-	    
-	    
-	    System.out.println("1:View Hero, 2:Change Hero Name, 3:Re-Roll Hero, 4:Return to main menu");
 	    System.out.print(">");
-	    String command = scanner.nextLine();
-
-	    switch (command) {
-	    case "1":
-		System.out.println("Your Hero:");
-		System.out.println(controller.getPlayerCharacter().toString());
-		break;
-	    case "2":
-		System.out.println("What should the hero's name be?");
-		System.out.print(">");
-		this.controller.nameThePlayer(scanner.nextLine());
-		break;
-	    case "3":
-		System.out.println("Making a new hero!");
-		System.out.println("What should the hero's name be?");
-		System.out.print(">");
-		this.controller.reRoll(scanner.nextLine());
-		break;
-	    case "4":
-		System.out.println("Return to main menu");
-		System.out.println(this.breakSpace);
-		return;
-	    default:
-		System.out.println("Sorry, that's not a valid command.");
-		break;
+	    String command = this.scanner.nextLine();
+	    
+	    try {
+		int commandIndex = -1;
+		commandIndex = Integer.parseInt(command)-1;
+		System.out.println(scene.advanceRound(commandIndex));
+	    } catch (Exception e) {
+		// TODO Auto-generated catch block
+		System.out.println("Sorry, please try entering a number within range.");;
 	    }
-	    break;
-	}*/
+	    
+	}
     }
 
     public void manageShop() {

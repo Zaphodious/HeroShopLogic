@@ -17,6 +17,18 @@ public class Inventory {
 	storage = new HashMap<Integer, Item>();
 	this.maxWeight = maxWeight;
     }
+    
+    public Inventory(Item... items) {
+	this();
+	int weight = 0;
+	for (Item item:items) {
+	    weight += item.getWeight();
+	}
+	weight *= 3;
+	this.setMaxWeight(weight);
+	this.addItems(items);
+	
+    }
 
     public Inventory() {
 	this(25);
@@ -112,4 +124,19 @@ public class Inventory {
     public int getCurrentWeight() {
 	return currentWeight;
     }
+
+    @Override
+    public String toString() {
+	StringBuilder toReturn = new StringBuilder();
+	toReturn.append("maxWeight=" + maxWeight + "\n");
+	toReturn.append("currentWeight=" + currentWeight + "\n");
+	
+	for (Item item:storage.values()) {
+	    toReturn.append(item.toString() + "\n");
+	}
+	
+	return toReturn.toString();
+    }
+    
+    
 }
