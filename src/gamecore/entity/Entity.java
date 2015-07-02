@@ -1,8 +1,10 @@
 package gamecore.entity;
 
+import gamecore.Dice;
 import gamecore.Inventory;
 import gamecore.Reference;
 import gamecore.adventure.CombatUsable;
+import gamecore.adventure.RoundInfoContainer;
 import gamecore.item.Weapon;
 
 import java.util.ArrayList;
@@ -41,15 +43,23 @@ public abstract class Entity {
 	this.weapon = Reference.DEFAULT_WEAPON;
 	inventory = new Inventory((stats.get(Attribute.ATK_STRENGTH) + stats.get(Attribute.DEF_STRENGTH)) / 2);
 	this.type = type;
-	this.salt = (salt == 0) ? Reference.rand.nextInt() : salt;
+	this.salt = (salt == 0) ? Dice.SALT.roll() : salt;
     }
 
     protected Entity(String name, EntityType type) {
 	this(name, StatMaker.makeAttributeMap(true), type);
     }
 
-    protected Entity(String name, int experience, EntityType type) {
-	this(name, StatMaker.makeAttributeMap(true, experience), type);
+    protected Entity(String name, int level, EntityType type) {
+	this(name, StatMaker.makeAttributeMap(true, Reference.WHAT_EXPERIENCE(level)), type);
+    }
+
+    protected Entity(String name, int experience, Attribute[] buffed, Attribute[] nerfed, EntityType type) {
+	this(name, StatMaker.makeAttributeMap(false, experience, buffed, nerfed), type);
+    }
+    
+    protected Entity(boolean random, String name, int experience, Attribute[] buffed, Attribute[] nerfed, EntityType type) {
+	this(name, StatMaker.makeAttributeMap(random, experience, buffed, nerfed), type);
     }
 
     public char getSymbol() {
@@ -66,11 +76,12 @@ public abstract class Entity {
     }
 
     public boolean changeAttribute(Attribute attribute, int value) {
-	/*if (this.stats.containsValue(attribute)) {*/
-	    this.stats.put(attribute, this.stats.get(attribute) + value);
-	    return true;
-	/*}
-	return false;*/
+	/* if (this.stats.containsValue(attribute)) { */
+	this.stats.put(attribute, this.stats.get(attribute) + value);
+	return true;
+	/*
+	 * } return false;
+	 */
 
     }
 
@@ -103,11 +114,9 @@ public abstract class Entity {
 
 	return false;
     }
-    
-    
 
     public String getName() {
-        return name;
+	return name;
     }
 
     public void setName(String name) {
@@ -119,12 +128,12 @@ public abstract class Entity {
 	this.weapon = weapon;
 	this.getInventory().removeItem(weapon);
     }
-    
+
     public void unequipWeapon() {
 	this.putCurrentWeaponInInventory();
 	this.weapon = Reference.DEFAULT_WEAPON;
     }
-    
+
     private void putCurrentWeaponInInventory() {
 	if (this.weapon != null && this.weapon != Reference.DEFAULT_WEAPON) {
 	    inventory.addItem(this.weapon);
@@ -151,21 +160,69 @@ public abstract class Entity {
 
 	return thisGuy.toString();
     }
+    
+    public boolean successfullyHits(RoundInfoContainer roundInfo) {
+	int difficultyCheck = 10;
+	int defenderModifier = 0;
+	int attackerModifier = 0;
+	int numberOfAttributesUsed = 0;
+	List<Attribute> usedToCheck = new ArrayList<Attribute>();
+	if (roundInfo.hasAttributes()) {
+	    for (Attribute attribute:Attribute.values()) {
+		if (roundInfo.hasThisAttribute(attribute)) {
+		    numberOfAttributesUsed ++;
+		    usedToCheck.add(attribute);
+		    defenderModifier += roundInfo.getValueForAttribute(attribute);
+		    attackerModifier += roundInfo.getAttacker().getAttribute(attribute);
+		}
+		
+		if (defenderModifier > 0 && numberOfAttributesUsed > 1) {
+		    defenderModifier = defenderModifier/numberOfAttributesUsed;
+		    if (attackerModifier > 0) {
+			attackerModifier = attackerModifier/numberOfAttributesUsed;
+		    }
+		}
+		
+		
+	    }
+	}
+	
+	
+	
+	difficultyCheck += defenderModifier;
+	
+	
+	
+	return (difficultyCheck > Dice.D10.roll() + attackerModifier);
+    }
 
-    public int hurt(int amount) {
+    public int hurt(RoundInfoContainer damage) {
+	System.out.println("this has been reached");
+	int toReturn = damage.getAmount();
 
-	int toReturn = amount;
-	this.changeAttribute(Attribute.CURRENT_HEALTH, -amount);
+	if (damage.hasAttributes()) {
+	    if (damage.hasEntity()) {
+		for (Attribute attribute : damage.getToCheckAgainst().keySet()) {
+		    int modifier = damage.getToCheckAgainst().get(attribute) - this.getAttribute(attribute);
+		    toReturn += modifier;
+		}
+	    }
+	}
+
+	if (toReturn <= 0) {
+	    toReturn = 1;
+	}
+	this.changeAttribute(Attribute.CURRENT_HEALTH, -toReturn);
 	return toReturn;
     }
 
     public int attack(Entity entity) {
 
-	return this.getWeapon().use(entity);
+	return this.getWeapon().use(this, entity);
     }
-    
+
     public int attackUsing(Entity entity, CombatUsable combatUsable) {
-	return combatUsable.use(entity);
+	return combatUsable.use(this, entity);
     }
 
     public void attack(Entity... entities) {
@@ -185,7 +242,7 @@ public abstract class Entity {
 
 class StatMaker {
 
-    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, List<Attribute> buffed, List<Attribute> nerfed, boolean reward) {
+    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, List<Attribute> buffed, List<Attribute> nerfed) {
 	Map<Attribute, Integer> toReturn = new HashMap<Attribute, Integer>();
 	if (buffed == null) {
 	    buffed = new ArrayList<Attribute>();
@@ -199,45 +256,47 @@ class StatMaker {
 	int level = Reference.WHAT_LEVEL(experience);
 
 	for (Attribute attribute : Attribute.values()) {
-	    int stat = (random) ? Reference.rand.nextInt(7) : 7;
-	    if (reward && buffed.contains(attribute)) {
-		stat = level;
-	    } else {
-		if (buffed.contains(attribute)) {
-		    stat += level * 3;
-		} else if (nerfed.contains(attribute)) {
-		    stat += level / 2;
-		} else if (attribute == Attribute.EXPERIENCE) {
-		    stat = experience;
-		} else if (attribute == Attribute.CURRENT_HEALTH) {
-		    stat = toReturn.get(Attribute.MAX_HEALTH);
-		} else if (attribute == Attribute.CURRENT_HUNGER) {
-		    stat = toReturn.get(Attribute.MAX_HUNGER);
-		} else if (attribute == Attribute.CURRENT_MAGIC_POINTS) {
-		    stat = toReturn.get(Attribute.MAX_MAGIC_POINTS);
-		} else {
-		    stat += level;
-		}
+	    int stat = (random) ? Dice.D3.roll() + Dice.D3.roll() + Dice.D3.roll() : 6;
+	    if (buffed.contains(attribute)) {
+		System.out.println("buffed will be " + attribute.name());
+		stat += 1;
+	    } 
+
+	    if (nerfed.contains(attribute)) {
+		System.out.println("nerfed will be " + attribute.name());
+		stat -= 1;
 	    }
+
+	    if (attribute == Attribute.EXPERIENCE) {
+		stat = experience;
+	    } else if (attribute == Attribute.CURRENT_HEALTH) {
+		stat = toReturn.get(Attribute.MAX_HEALTH);
+	    } else if (attribute == Attribute.CURRENT_HUNGER) {
+		stat = toReturn.get(Attribute.MAX_HUNGER);
+	    } else if (attribute == Attribute.CURRENT_MAGIC_POINTS) {
+		stat = toReturn.get(Attribute.MAX_MAGIC_POINTS);
+	    } else {
+		// stat += level;
+
+	    }
+
 	    toReturn.put(attribute, stat);
 	}
 	return toReturn;
     }
 
     public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, Attribute[] buffed, Attribute[] nerfed) {
-	return makeAttributeMap(random, experience, Arrays.asList(buffed), Arrays.asList(nerfed), false);
+	return makeAttributeMap(random, experience, Arrays.asList(buffed), Arrays.asList(nerfed));
     }
 
     public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience) {
-	return makeAttributeMap(random, experience, new ArrayList<Attribute>(), new ArrayList<Attribute>(), false);
+	return makeAttributeMap(random, experience, new ArrayList<Attribute>(), new ArrayList<Attribute>());
     }
-    
+
     public static Map<Attribute, Integer> makeAttributeMap(boolean random) {
-	return makeAttributeMap(random, 100, new ArrayList<Attribute>(), new ArrayList<Attribute>(), false);
+	return makeAttributeMap(random, 100, new ArrayList<Attribute>(), new ArrayList<Attribute>());
     }
-    
-    public static Map<Attribute, Integer> getAttributeReward(int experience, Attribute... toDrop) {
-	return makeAttributeMap(true, experience, Arrays.asList(toDrop), new ArrayList<Attribute>(), true);
-    }
+
+
 
 }

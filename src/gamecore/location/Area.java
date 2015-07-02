@@ -1,5 +1,7 @@
 package gamecore.location;
 
+import gamecore.Reference;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,10 +12,10 @@ public class Area {
 
     int experienceLevel;
 
-    public Area(int experienceLevel) {
+    public Area(int level) {
 
 	this.encounters = new ArrayList<Encounter>();
-	this.experienceLevel = experienceLevel;
+	this.experienceLevel = Reference.WHAT_EXPERIENCE(level);
     }
     
     public Area(int experienceLevel, Encounter... encounters) {

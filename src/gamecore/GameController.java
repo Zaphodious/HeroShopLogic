@@ -1,5 +1,6 @@
 package gamecore;
 
+import gamecore.entity.Attribute;
 import gamecore.entity.EntityType;
 import gamecore.entity.Hero;
 import gamecore.entity.Monster;
@@ -19,7 +20,9 @@ public class GameController {
     private List<Hero> employees;
 
     public GameController() {
-	playerCharacter = new Hero("Marco", EntityType.PLAYER_CHARACTER);
+	Attribute[] buffed = {Attribute.ATK_STRENGTH};
+	Attribute[] nerfed = {Attribute.DEF_DEXTERITY};
+	playerCharacter = new Hero(true,"Marco", 100, buffed, nerfed, EntityType.PLAYER_CHARACTER);
 	setSideKick(new Hero("Zabroni", EntityType.SIDEKICK));
 	setEmployees(new ArrayList<Hero>());
     }
@@ -53,13 +56,15 @@ public class GameController {
     }
 
     public void reRoll(String name) {
-	this.playerCharacter = new Hero(name, EntityType.PLAYER_CHARACTER);
+	Attribute[] buffed = {Attribute.ATK_STRENGTH};
+	Attribute[] nerfed = {Attribute.DEF_DEXTERITY};
+	this.playerCharacter = new Hero(true,"Marco", 100, buffed, nerfed, EntityType.PLAYER_CHARACTER);
     }
     
     public Encounter randomEncounter() {
-	Monster goblin = new Monster("Goblin", 100, EntityType.GOBLIN);
-	goblin.equipWeapon(new Weapon("Axe", 2, 100));
-	Encounter toReturn = new Encounter(goblin, null, null, 0, new Weapon("Hatchet", 2, 100));
+	Monster goblin = new Monster("Goblin", 1, EntityType.GOBLIN);
+	goblin.equipWeapon(new Weapon("Axe", 2, 100, Attribute.ATK_STRENGTH));
+	Encounter toReturn = new Encounter(goblin, null, null, 0, new Weapon("Hatchet", 2, 100, Attribute.ATK_STRENGTH));
 	toReturn.setDisplayLine("You're fighting a Goblin! Rawr!");
 	return toReturn;
     }

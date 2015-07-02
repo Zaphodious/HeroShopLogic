@@ -18,7 +18,9 @@ public enum Attribute {
     ATK_INTELLIGENCE("atk_intelligence"),
     DEF_STRENGTH("def_strength"),
     DEF_DEXTERITY("def_dexterity"),
-    DEF_INTELLIGENCE("def_intelligence");
+    DEF_INTELLIGENCE("def_intelligence"),
+    CHARISMA("charisma"),
+    WISDOM("wisdom");
 
     private String name;
 

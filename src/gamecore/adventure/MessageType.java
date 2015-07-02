@@ -3,6 +3,7 @@ package gamecore.adventure;
 public enum MessageType {
 
     FIGHTING_NAME("name of what you're fighting"),
+    ATTACK_MISS("the attack missed"),
     OPPONENT_DAMAGE_TAKEN("damage to opponent"),
     OPPONENT_STAT_INCREASE("opponent stat increase"),
     OPPONENT_STAT_DECREASE("opponent stat decrease"),

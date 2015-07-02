@@ -1,7 +1,10 @@
 package gamecore.item;
 
 import gamecore.Reference;
+import gamecore.adventure.CombatTag;
 import gamecore.entity.Entity;
+
+import java.util.List;
 
 /**
  * Created by achyt_000 on 6/24/2015.
@@ -107,6 +110,10 @@ public abstract class Item implements Cloneable {
     public boolean isCombatUsable() {
         return combatUsable;
     }
+    
+    public boolean hasCombatTag(CombatTag tag) {
+	return false;
+    }
 
     public void setCombatUsable(boolean combatUsable) {
         this.combatUsable = combatUsable;
@@ -114,7 +121,6 @@ public abstract class Item implements Cloneable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-	// TODO Auto-generated method stub
 	return super.clone();
     }
 

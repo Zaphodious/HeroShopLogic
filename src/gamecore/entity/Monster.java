@@ -6,8 +6,8 @@ package gamecore.entity;
  */
 public class Monster extends Entity {
 
-    public Monster(String name, int experience, EntityType type) {
-	super(name, experience, type);
+    public Monster(String name, int level, EntityType type) {
+	super(name, level, type);
     }
     
     

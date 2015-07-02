@@ -43,6 +43,8 @@ public class TextInterface {
 
     public void startInterface() {
 	String command = "";
+	System.out.println("You are an experienced adventurer, a brave soul who has won many battles and gained much gold. Somewhere along the way, you got it into your head that it would be a great idea to "
+		+ "open your own item shop.");
 	while (true) {
 	    System.out.println("Please select from the following choices (use the number):");
 	    System.out.println("1:Character, 2:Inventory, 3:Adventure, 4:Shop, 5:Exit");
@@ -154,8 +156,8 @@ public class TextInterface {
 		break;
 	    case "2":
 		System.out.println("Adding a whole mess of items!");
-		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Battle Axe", rand.nextInt(12), 64));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Long Sword", rand.nextInt(12), 64));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Battle Axe", rand.nextInt(12), 64, Attribute.ATK_STRENGTH));
+		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Long Sword", rand.nextInt(12), 64, Attribute.ATK_STRENGTH));
 		this.controller.getPlayerCharacter().getInventory().addItem(new HealthPotion("Minor Health Potion", rand.nextInt(12), 4));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Cheese, Bowl of Cottage", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Wood", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
@@ -164,7 +166,7 @@ public class TextInterface {
 		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Vanilla Beans", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Pile of Shiny Rocks", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
 		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Funky-Smelling Cloth", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		
+
 		break;
 	    case "3":
 
@@ -222,33 +224,35 @@ public class TextInterface {
 	System.out.println(this.breakSpace);
 	Encounter encounter = this.controller.randomEncounter();
 	Scene scene = new Scene(this.controller.getPlayerCharacter(), encounter);
-	while(scene.stillOngoing()) {
+	while (scene.stillOngoing()) {
 	    System.out.println("You went adventuring");
 	    System.out.println(scene.getEncounter().getDisplayLine());
 	    System.out.println("Enemy Health: " + scene.getEncounter().getEntityToFight().getAttribute(Attribute.CURRENT_HEALTH));
 	    System.out.println("Possible commands are:");
 	    List<CombatCommand> commands = scene.getCommands();
 	    for (int i = 0; i < commands.size(); i++) {
-		System.out.println(i+1 + ": " + commands.get(i).getCommand());
+		System.out.println(i + 1 + ": " + commands.get(i).getCommand());
 	    }
-	    
+
 	    System.out.print(">");
 	    String command = this.scanner.nextLine();
-	    
+
 	    try {
 		int commandIndex = -1;
-		commandIndex = Integer.parseInt(command)-1;
+		commandIndex = Integer.parseInt(command) - 1;
 		System.out.println(scene.advanceRound(commandIndex));
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
-		System.out.println("Sorry, please try entering a number within range.");;
+		//System.out.println("Sorry, please try entering a number within range.");
+		System.out.println(e);
+		e.printStackTrace();
 	    }
-	    
+
 	}
     }
 
     public void manageShop() {
-
+	System.out.println("Shop functionality has not been implemented yet.");
     }
 
 }

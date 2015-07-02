@@ -1,7 +1,9 @@
 package gamecore.adventure;
 
+import gamecore.Inventory;
 import gamecore.entity.Attribute;
 import gamecore.entity.Entity;
+import gamecore.item.Item;
 import gamecore.location.Encounter;
 
 import java.util.ArrayList;
@@ -38,33 +40,33 @@ public class Scene {
     }
 
     public boolean stillOngoing() {
-        return ongoing;
+	return ongoing;
     }
 
     public List<CombatCommand> getCommands() {
 	List<CombatCommand> toReturn = new ArrayList<CombatCommand>();
 	for (CombatCommandType type : CombatCommandType.values()) {
-	   switch (type) {
-	case ATTACK_WITH_WEAPON:
-	    toReturn.addAll(this.getWeaponCommand());
-	    break;
-	case RUN:
-	    toReturn.addAll(this.getRunCommand());
-	    break;
-	case USE_ITEM:
-	    toReturn.addAll(this.getItemCommands());
-	    break;
-	case USE_SKILL:
-	    toReturn.addAll(this.getSkillCommands());
-	    break;
-	default:
-	    toReturn.addAll(this.getWeaponCommand());
-	    break;
-	} 
+	    switch (type) {
+	    case ATTACK_WITH_WEAPON:
+		toReturn.addAll(this.getWeaponCommand());
+		break;
+	    case RUN:
+		toReturn.addAll(this.getRunCommand());
+		break;
+	    case USE_ITEM:
+		toReturn.addAll(this.getItemCommands());
+		break;
+	    case USE_SKILL:
+		toReturn.addAll(this.getSkillCommands());
+		break;
+	    default:
+		toReturn.addAll(this.getWeaponCommand());
+		break;
+	    }
 	}
 	this.currentCommands = toReturn;
 	return toReturn;
-	
+
     }
 
     private List<CombatCommand> getSkillCommands() {
@@ -72,7 +74,14 @@ public class Scene {
     }
 
     private List<CombatCommand> getItemCommands() {
-	return new ArrayList<CombatCommand>();
+	List<CombatCommand> toReturn = new ArrayList<CombatCommand>();
+	Inventory playerInventory = this.playerCharacter.getInventory();
+	for (Item item : playerInventory.getItems()) {
+	    if (item.hasCombatTag(CombatTag.USEABLE_FROM_INVENTORY)) {
+		toReturn.add(new CombatCommand(CombatCommandType.USE_ITEM, (CombatUsable) item, "Use " + item.getName()));
+	    }
+	}
+	return toReturn;
     }
 
     private List<CombatCommand> getRunCommand() {
@@ -87,17 +96,30 @@ public class Scene {
 	return toReturn;
     }
 
-    public RoundResult advanceRound(int commandIndex){
-	
+    public RoundResult advanceRound(int commandIndex) {
+
 	if (this.currentCommands == null) {
 	    this.currentCommands = this.getCommands();
 	}
-	
-	
+
 	RoundResult toReturn = new RoundResult();
-	
-	toReturn.addMessage(MessageType.OPPONENT_DAMAGE_TAKEN, "The enemy took "+playerCharacter.attackUsing(encounter.getEntityToFight(), this.currentCommands.get(commandIndex).getUsable())+" damage.");
-	toReturn.addMessage(MessageType.PLAYER_DAMAGE_TAKEN, "You took "+ this.encounter.getEntityToFight().attack(playerCharacter) +" damage.");
+
+	if (this.currentCommands.get(commandIndex).getUsable().hasCombatTag(CombatTag.HARMS_OPPONENT)) {
+
+	    if (this.playerCharacter.successfullyHits(new RoundInfoContainer(this.getPlayerCharacter(), this.encounter.getEntityToFight(), this.playerCharacter.getWeapon(), this.playerCharacter.getWeapon().getPotency(), this.playerCharacter.getWeapon().getAttackUsing()))) {
+		    toReturn.addMessage(MessageType.OPPONENT_DAMAGE_TAKEN, "The enemy took " + playerCharacter.attackUsing(encounter.getEntityToFight(), this.currentCommands.get(commandIndex).getUsable()) + " damage.");
+
+	    } else {
+		toReturn.addMessage(MessageType.ATTACK_MISS, "Sorry, your attack missed");
+	    }
+
+	}
+
+	if (this.currentCommands.get(commandIndex).getUsable().hasCombatTag(CombatTag.HEALS_PLAYER)) {
+	    toReturn.addMessage(MessageType.PLAYER_STAT_INCREASE, "The player was healed by " + playerCharacter.attackUsing(this.getPlayerCharacter(), this.currentCommands.get(commandIndex).getUsable()) + " points.");
+	}
+
+	toReturn.addMessage(MessageType.PLAYER_DAMAGE_TAKEN, "You took " + this.encounter.getEntityToFight().attack(playerCharacter) + " damage.");
 	boolean enemyAlive = (this.encounter.getEntityToFight().getAttribute(Attribute.CURRENT_HEALTH) > 0);
 	boolean playerAlive = (this.playerCharacter.getAttribute(Attribute.CURRENT_HEALTH) > 0);
 	this.ongoing = enemyAlive && playerAlive;
