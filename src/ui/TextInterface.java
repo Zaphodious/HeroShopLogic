@@ -5,16 +5,17 @@
  */
 package ui;
 
+import gamecore.Dice;
 import gamecore.GameController;
-import gamecore.Reference;
 import gamecore.adventure.CombatCommand;
+import gamecore.adventure.CombatTag;
 import gamecore.adventure.Scene;
 import gamecore.entity.Attribute;
-import gamecore.item.Food;
-import gamecore.item.HealthPotion;
+import gamecore.item.BasicItemType;
+import gamecore.item.BasicWeaponType;
 import gamecore.item.Item;
-import gamecore.item.ItemType;
-import gamecore.item.Material;
+import gamecore.item.ItemBuilder;
+import gamecore.item.UseTag;
 import gamecore.item.Weapon;
 import gamecore.location.Encounter;
 
@@ -40,6 +41,11 @@ public class TextInterface {
 	this.controller = controller;
 	this.breakSpace = ".-*-.-*-.-*-.-*-.-*-.-*-.-*-.";
     }
+    
+    private String getInput() {
+	System.out.print("👉>");
+	return this.scanner.nextLine();
+    }
 
     public void startInterface() {
 	String command = "";
@@ -47,10 +53,10 @@ public class TextInterface {
 		+ "open your own item shop.");
 	while (true) {
 	    System.out.println("Please select from the following choices (use the number):");
-	    System.out.println("1:Character, 2:Inventory, 3:Adventure, 4:Shop, 5:Exit");
-	    System.out.print(">");
+	    System.out.println("1:Character, 2:Inventory, 3:Adventure, 4:Shop, e:Exit");
+	    
 
-	    command = scanner.nextLine();
+	    command = getInput();
 
 	    switch (command) {
 	    case "1":
@@ -69,7 +75,7 @@ public class TextInterface {
 		System.out.println("calling the shop function.");
 		this.manageShop();
 		break;
-	    case "5":
+	    case "e":
 		System.out.println("Exiting. Bye now!");
 		return;
 	    default:
@@ -86,9 +92,9 @@ public class TextInterface {
 
 	while (true) {
 	    System.out.println("Hero menu. Please select from the following options:");
-	    System.out.println("1:View Hero, 2:Change Hero Name, 3:Re-Roll Hero, 4:Return to main menu");
-	    System.out.print(">");
-	    String command = scanner.nextLine();
+	    System.out.println("1:View Hero, 2:Change Hero Name, 3:Re-Roll Hero, e:Return to main menu");
+	    
+	    String command = getInput();
 
 	    switch (command) {
 	    case "1":
@@ -97,16 +103,15 @@ public class TextInterface {
 		break;
 	    case "2":
 		System.out.println("What should the hero's name be?");
-		System.out.print(">");
-		this.controller.nameThePlayer(scanner.nextLine());
+		this.controller.nameThePlayer(getInput());
 		break;
 	    case "3":
 		System.out.println("Making a new hero!");
 		System.out.println("What should the hero's name be?");
-		System.out.print(">");
-		this.controller.reRoll(scanner.nextLine());
+		
+		this.controller.reRoll(getInput());
 		break;
-	    case "4":
+	    case "e":
 		System.out.println("Return to main menu");
 		System.out.println(this.breakSpace);
 		return;
@@ -124,10 +129,10 @@ public class TextInterface {
 	while (true) {
 	    Item[] playerInventory = this.controller.getPlayerCharacter().getInventory().getItems();
 	    System.out.println("Inventory Menu. Please select from the following:");
-	    System.out.println("1:View inventory, 2:Add test data, 3:Remove Item, 4:Equip Weapon, 5:Return to main menu");
-	    System.out.print(">");
+	    System.out.println("1:View inventory, 2:Add test data, 3:Remove Item, 4:Equip Weapon, e:Return to main menu");
+	   
 
-	    command = scanner.nextLine();
+	    command = getInput();
 
 	    switch (command) {
 	    case "1":
@@ -156,16 +161,9 @@ public class TextInterface {
 		break;
 	    case "2":
 		System.out.println("Adding a whole mess of items!");
-		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Battle Axe", rand.nextInt(12), 64, Attribute.ATK_STRENGTH));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Weapon("Long Sword", rand.nextInt(12), 64, Attribute.ATK_STRENGTH));
-		this.controller.getPlayerCharacter().getInventory().addItem(new HealthPotion("Minor Health Potion", rand.nextInt(12), 4));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Cheese, Bowl of Cottage", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Wood", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Random Crafting Item", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Cheese, Cheddar", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Food("Vanilla Beans", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Pile of Shiny Rocks", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
-		this.controller.getPlayerCharacter().getInventory().addItem(new Material("Funky-Smelling Cloth", rand.nextInt(Reference.DEFAULT_MAX_STACK_SIZE)));
+		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Short Sword", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setWeaponType(BasicWeaponType.SWORD).setWeight(1).build());
+		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Battle Axe", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setWeaponType(BasicWeaponType.BATTLE_AXE).setWeight(1).build());
+		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Health Potion", BasicItemType.POTION).setCombatTags(CombatTag.USEABLE_FROM_INVENTORY, CombatTag.USEABLE_FROM_INVENTORY).setUseTag(UseTag.USABLE_ANYWHERE).setPotency(Dice.D6.roll()).setWeight(1).build(), Dice.D10.roll());
 
 		break;
 	    case "3":
@@ -173,8 +171,7 @@ public class TextInterface {
 		while (true) {
 		    try {
 			System.out.println("At which position?");
-			System.out.println(">");
-			int itemIndex = Integer.parseInt(scanner.nextLine());
+			int itemIndex = Integer.parseInt(getInput());
 			itemIndex--;
 			this.controller.getPlayerCharacter().getInventory().removeItem(playerInventory[itemIndex]);
 			break;
@@ -188,21 +185,20 @@ public class TextInterface {
 		break;
 	    case "4":
 		System.out.println("Weapons:");
-		if (this.controller.getPlayerCharacter().getInventory().getItems(ItemType.WEAPON).length == 0) {
+		if (this.controller.getPlayerCharacter().getInventory().getItems(BasicItemType.WEAPON).length == 0) {
 		    System.out.println("The inventory is empty");
 		} else {
 		    int count = 1;
-		    for (Item item : this.controller.getPlayerCharacter().getInventory().getItems(ItemType.WEAPON)) {
+		    for (Item item : this.controller.getPlayerCharacter().getInventory().getItems(BasicItemType.WEAPON)) {
 			System.out.println(count + ": " + item.toString());
 			count++;
 		    }
 
 		    System.out.println("Which weapon do you want to equip?");
 		    try {
-			System.out.println(">");
-			int itemIndex = Integer.parseInt(scanner.nextLine());
+			int itemIndex = Integer.parseInt(getInput());
 			itemIndex--;
-			this.controller.getPlayerCharacter().equipWeapon((Weapon) this.controller.getPlayerCharacter().getInventory().getItems(ItemType.WEAPON)[itemIndex]);
+			this.controller.getPlayerCharacter().equipWeapon((Weapon) this.controller.getPlayerCharacter().getInventory().getItems(BasicItemType.WEAPON)[itemIndex]);
 			break;
 		    } catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -210,7 +206,7 @@ public class TextInterface {
 		    }
 		}
 		break;
-	    case "5":
+	    case "e":
 		System.out.println("Returning you to the main menu.");
 		return;
 	    default:
@@ -234,8 +230,8 @@ public class TextInterface {
 		System.out.println(i + 1 + ": " + commands.get(i).getCommand());
 	    }
 
-	    System.out.print(">");
-	    String command = this.scanner.nextLine();
+	    
+	    String command = getInput();
 
 	    try {
 		int commandIndex = -1;
@@ -243,7 +239,7 @@ public class TextInterface {
 		System.out.println(scene.advanceRound(commandIndex));
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
-		//System.out.println("Sorry, please try entering a number within range.");
+		// System.out.println("Sorry, please try entering a number within range.");
 		System.out.println(e);
 		e.printStackTrace();
 	    }
@@ -252,7 +248,40 @@ public class TextInterface {
     }
 
     public void manageShop() {
-	System.out.println("Shop functionality has not been implemented yet.");
+
+	System.out.println(this.breakSpace);
+	while (true) {
+	    System.out.println("Employees have " + this.controller.getTestEmployee().howManyChances() + " items available for pickup.");
+	    System.out.println("Time until next item: " + this.controller.getTestEmployee().secondsUntilNextChance());
+	    System.out.println("Shop Menu (alpha). Please select from the following items:");
+	    System.out.println("1:Wait a while, 2:Collect items, e:Return to main menu");
+	    
+	    String input = getInput();
+	    
+	    boolean toExit = false;
+	    switch (input) {
+	    case "1":
+		System.out.println("waiting a while...");
+		break;
+	    case "2":
+		System.out.println("Employees have " + this.controller.getTestEmployee().howManyChances() + " items available for pickup.");
+		    System.out.println("Time until next item: " + this.controller.getTestEmployee().secondsUntilNextChance());
+		System.out.println("Collecting items.");
+		int collected = this.controller.getTestEmployee().collectItems();
+		System.out.println("Collected " + collected + " items.");
+		
+		break;
+	    case "e":
+		System.out.println("returning to main menu.");
+		toExit = true;
+		break;
+	    }
+	    if (toExit) {
+		break;
+	    }
+
+	}
+
     }
 
 }

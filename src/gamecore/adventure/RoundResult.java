@@ -5,15 +5,15 @@ import java.util.List;
 
 public class RoundResult {
 
-    private List<MessageContainer> messages; 
+    private List<CombatMessage> messages; 
     
     public RoundResult() {
-	messages = new ArrayList<MessageContainer>();
+	messages = new ArrayList<CombatMessage>();
     }
 
     public String[] getMessagesOfType(MessageType messageType) {
 	List<String> toReturn = new ArrayList<String>();
-	for (MessageContainer message : messages) {
+	for (CombatMessage message : messages) {
 	    if (message.getMessageType() == messageType) {
 		toReturn.add(message.getMessageString());
 	    }
@@ -24,7 +24,7 @@ public class RoundResult {
     public List<String> getAllMessages() {
 	List<String> toReturn = new ArrayList<String>();
 	
-	for (MessageContainer message : messages) {
+	for (CombatMessage message : messages) {
 	    toReturn.add(message.getMessageType().toString() + ": " + message.getMessageString());
 	}
 	
@@ -32,7 +32,7 @@ public class RoundResult {
     }
     
     public void addMessage(MessageType messageType, String message) {
-	this.messages.add(new MessageContainer(messageType, message));
+	this.messages.add(new CombatMessage(messageType, message));
     }
     
      @Override
@@ -44,25 +44,6 @@ public class RoundResult {
 	}
 	return toReturn.toString();
     }
-    
-    
-}
-
-class MessageContainer {
-    private MessageType messageType;
-    private String messageString;
-    public MessageContainer(MessageType messageType, String messageString) {
-	super();
-	this.messageType = messageType;
-	this.messageString = messageString;
-    }
-    public MessageType getMessageType() {
-        return messageType;
-    }
-    public String getMessageString() {
-        return messageString;
-    }
-   
     
     
 }

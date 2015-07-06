@@ -3,63 +3,56 @@ package gamecore;
 import gamecore.item.Item;
 import gamecore.item.ItemType;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Inventory {
 
-    private Map<Integer, Item> storage;
+    private Map<Item, Integer> contents;
 
     int maxWeight;
     int currentWeight;
 
     public Inventory(int maxWeight) {
-	storage = new HashMap<Integer, Item>();
+	contents = ZaphUtil.newMap();
 	this.maxWeight = maxWeight;
     }
-    
-    public Inventory(Item... items) {
-	this();
-	int weight = 0;
-	for (Item item:items) {
-	    weight += item.getWeight();
-	}
-	weight *= 3;
-	this.setMaxWeight(weight);
-	this.addItems(items);
-	
-    }
+   
 
     public Inventory() {
 	this(25);
     }
+    
+    public Inventory(Item... items) {
+	contents = ZaphUtil.newMap();
+	for (Item item:items) {
+	    this.currentWeight += item.getWeight();
+	    this.addItem(item);
+	}
+    }
 
-    public boolean addItem(Item item) {
-
+    public boolean addItem(Item item, int amount) {
+	int previousAmount = 0;
 	if (item.getWeight() + this.currentWeight > this.maxWeight) {
 	    return false;
 	}
-	if (storage.containsKey(item.hashCode()) && item.isStackable()) {
-	    storage.get(item.hashCode()).addToStack(item.getStackSize());
-
-	    ;
-	} else {
-	    storage.put(item.hashCode(), item);
-	}
+	if (contents.containsKey(item) && item.isStackable()) {
+	    
+	    previousAmount = contents.get(item);
+	} 
+	    contents.put(item, amount + previousAmount);
+	
 	this.currentWeight += item.getWeight();
 	return true;
     }
 
-    public void addItems(Item... items) {
-	for (Item item : items) {
-	    this.addItem(item);
-	}
+    public boolean addItem(Item item) {
+	return this.addItem(item, 1);
     }
 
     public Item[] getItems(ItemType type) {
 	Item[] toReturn = new Item[this.numberOfItems(type)];
 	int counter = 0;
-	for (Item item : storage.values()) {
+	for (Item item : contents.keySet()) {
 	    if (item.getType() == type) {
 		toReturn[counter] = item;
 		counter++;
@@ -72,7 +65,7 @@ public class Inventory {
     public Item[] getItems() {
 	Item[] toReturn = new Item[this.numberOfItems()];
 	int counter = 0;
-	for (Item item : storage.values()) {
+	for (Item item : contents.keySet()) {
 	    toReturn[counter] = item;
 	    counter++;
 	}
@@ -80,37 +73,46 @@ public class Inventory {
     }
 
     public int numberOfItems() {
-	return storage.size();
+	return contents.size();
     }
 
     public int numberOfItems(ItemType type) {
 	int toReturn = 0;
-	for (Item item : storage.values()) {
+	for (Item item : contents.keySet()) {
 	    if (item.getType() == type) {
 		toReturn++;
 	    }
 	}
 	return toReturn;
     }
-
-    public boolean removeItem(Item item) {
-	if (storage.containsKey(item.hashCode())) {
-	    this.currentWeight -= item.getWeight();
-	    storage.remove(item.hashCode());
-	    return true;
-	} else {
-	    return false;
+    
+    public int removeItem(Item item, int amount) {
+	int numberItemsRemoved = 0;
+	for (int i = 0; i < amount; i--) {
+	    numberItemsRemoved += (this.removeItem(item)) ? 1:0;
 	}
+	return numberItemsRemoved;
     }
 
-    public void removeItems(Item... items) {
-	for (Item item : items) {
-	    this.removeItem(item);
+    public boolean removeItem(Item item) {
+	
+	if (this.contents.containsKey(item)) {
+	    
+	    int oldValue = contents.get(item);
+	    contents.put(item, oldValue-1);
+	    this.currentWeight -= item.getWeight();
+	    contents.remove(item);
+	    
 	}
+	return false;
+	
     }
 
     public void addOtherInventory(Inventory otherInventory) {
-	this.addItems(otherInventory.getItems());
+	
+	for (Item item : otherInventory.contents.keySet()) {
+	    this.addItem(item, otherInventory.contents.get(item));
+	}
     }
 
     public int getMaxWeight() {
@@ -131,7 +133,7 @@ public class Inventory {
 	toReturn.append("maxWeight=" + maxWeight + "\n");
 	toReturn.append("currentWeight=" + currentWeight + "\n");
 	
-	for (Item item:storage.values()) {
+	for (Item item:contents.keySet()) {
 	    toReturn.append(item.toString() + "\n");
 	}
 	

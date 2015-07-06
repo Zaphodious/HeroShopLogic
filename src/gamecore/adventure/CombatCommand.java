@@ -1,5 +1,7 @@
 package gamecore.adventure;
 
+import gamecore.item.CombatUsable;
+
 public class CombatCommand {
     CombatCommandType type;
     String command;

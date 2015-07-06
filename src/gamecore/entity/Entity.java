@@ -3,8 +3,11 @@ package gamecore.entity;
 import gamecore.Dice;
 import gamecore.Inventory;
 import gamecore.Reference;
-import gamecore.adventure.CombatUsable;
+import gamecore.ZaphUtil;
 import gamecore.adventure.RoundInfoContainer;
+import gamecore.item.Armor;
+import gamecore.item.CombatUsable;
+import gamecore.item.Item;
 import gamecore.item.Weapon;
 
 import java.util.ArrayList;
@@ -14,132 +17,174 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by achyt_000 on 6/24/2015.
+ * The meat-and-potatoes of combat. Each Entity has a name, a set of attributes, a weapon slot, armor slots, an EntityType, and an Inventory.<br/>
+ * The only way to instantiate an Entity is through an EntityBuilder object.
+ * @author Alex Chythlook
+ *
  */
-public abstract class Entity {
+public final class Entity {
 
-    protected String name;
+    private String name;
 
-    protected Map<Attribute, Integer> stats;
+    private Map<Attribute, Integer> stats;
 
-    protected Weapon weapon;
+    private Weapon weapon;
 
-    protected Inventory inventory;
+    private  Map<ArmorSlot, Armor> armor;
 
-    protected boolean invulnerable;
+    private Inventory inventory;
 
-    protected int salt;
+    private int salt;
 
-    protected EntityType type;
+    EntityType type;
 
-    protected Entity(String name, Map<Attribute, Integer> stats, EntityType type) {
-	this(name, stats, type, 0);
+    Entity(EntityBuilder builder) {
+
+	this.salt = builder.getSalt();
+	this.stats = builder.getStats();
+	this.inventory = builder.getInventory();
+	this.name = builder.getName();
+	this.weapon = builder.getWeapon();
+	this.armor = builder.getArmor();
+	this.type = builder.getType();
     }
 
-    protected Entity(String name, Map<Attribute, Integer> stats, EntityType type, int salt) {
-	this.name = name;
-	this.stats = stats;
-	this.invulnerable = false;
-	this.weapon = Reference.DEFAULT_WEAPON;
-	inventory = new Inventory((stats.get(Attribute.ATK_STRENGTH) + stats.get(Attribute.DEF_STRENGTH)) / 2);
-	this.type = type;
-	this.salt = (salt == 0) ? Dice.SALT.roll() : salt;
-    }
 
-    protected Entity(String name, EntityType type) {
-	this(name, StatMaker.makeAttributeMap(true), type);
-    }
-
-    protected Entity(String name, int level, EntityType type) {
-	this(name, StatMaker.makeAttributeMap(true, Reference.WHAT_EXPERIENCE(level)), type);
-    }
-
-    protected Entity(String name, int experience, Attribute[] buffed, Attribute[] nerfed, EntityType type) {
-	this(name, StatMaker.makeAttributeMap(false, experience, buffed, nerfed), type);
-    }
-    
-    protected Entity(boolean random, String name, int experience, Attribute[] buffed, Attribute[] nerfed, EntityType type) {
-	this(name, StatMaker.makeAttributeMap(random, experience, buffed, nerfed), type);
-    }
-
-    public char getSymbol() {
-	return this.type.getSymbol();
-    }
-
-    public boolean addAttribute(Attribute attribute, int value) {
-	this.stats.put(attribute, value);
-	return true;
-    }
-
+    /**
+     * Used to get the int value of a given attribute.
+     * @param attribute The Attribute enum for which a value is desired.
+     * @return The int value corrisponding to the supplied Attribute.
+     */
     public int getAttribute(Attribute attribute) {
 	return stats.get(attribute);
     }
 
-    public boolean changeAttribute(Attribute attribute, int value) {
-	/* if (this.stats.containsValue(attribute)) { */
+    private boolean changeAttribute(Attribute attribute, int value) {
 	this.stats.put(attribute, this.stats.get(attribute) + value);
 	return true;
-	/*
-	 * } return false;
-	 */
 
     }
 
-    public Map<Attribute, Integer> getStats() {
-	return stats;
-    }
 
-    public boolean isInvulnerable() {
-	return invulnerable;
-    }
-
-    public void setInvulnerable(boolean invulnerable) {
-	this.invulnerable = invulnerable;
-    }
-
-    public boolean feed(int hungerToAdd) {
-	if (this.getAttribute(Attribute.MAX_HUNGER) < hungerToAdd + this.getAttribute(Attribute.CURRENT_HUNGER)) {
+    /**
+     * Feeds the entity.
+     * @param hungerToAdd The potency of the food item/magic effect used to feed the player.
+     */
+    public void feed(int hungerToAdd) {
+	//TODO: Make it so that if the player's hunger would go below 0, it goes to 0 instead.
+	
 	    this.changeAttribute(Attribute.CURRENT_HUNGER, hungerToAdd);
-	    return true;
-	}
-
-	return false;
+	
     }
 
+    /**
+     * Heals the entity by a certain amount. Overhealing possible.
+     * @param healthToAdd amount by which to heal the player
+     * @return True if the entity's health was not at or above the max. False otherwise.
+     */
     public boolean heal(int healthToAdd) {
-	if (this.getAttribute(Attribute.MAX_HEALTH) < healthToAdd + this.getAttribute(Attribute.CURRENT_HEALTH)) {
+	if (this.getAttribute(Attribute.MAX_HEALTH) > this.getAttribute(Attribute.CURRENT_HEALTH)) {
 	    this.changeAttribute(Attribute.CURRENT_HEALTH, healthToAdd);
 	    return true;
 	}
 
 	return false;
     }
+    
+    /**
+     * Adds to the entity's gold count.
+     * @param goldToAdd The amount of gold to give the entity.
+     * @return False if the value would make the total gold count go below 0, True otherwise.
+     */
+    public boolean giveGold(int goldToAdd) {
+	//TODO: make it so that if the gold count would go below zero, method returns false immediately.
+	this.changeAttribute(Attribute.GOLD, goldToAdd);
+	return true;
+    }
+    
+    /**
+     * Restores magic points. Over-restoring possible.
+     * @param magicPointsToAdd Amount of magic points to restore.
+     * @return True if the entity's magic point total was not at or above the max. False otherwise.
+     */
+    public boolean restoreMP(int magicPointsToAdd) {
+	if (this.getAttribute(Attribute.MAX_MAGIC_POINTS) > this.getAttribute(Attribute.CURRENT_MAGIC_POINTS)) {
+	    this.changeAttribute(Attribute.CURRENT_MAGIC_POINTS, magicPointsToAdd);
+	    return true;
+	}
 
+	return false;
+    }
+
+    /**
+     * Gets the name of the player
+     * @return The player's name in String form.
+     */
     public String getName() {
 	return name;
     }
 
-    public void setName(String name) {
+    void reName(String name) {
 	this.name = name;
     }
 
-    public void equipWeapon(Weapon weapon) {
+    /**
+     * Equips the provided weapon, returning the currently-equpiped weapon to the inventory.
+     * @param weapon
+     * @return
+     */
+    public boolean equipWeapon(Weapon weapon) {
 	this.putCurrentWeaponInInventory();
 	this.weapon = weapon;
 	this.getInventory().removeItem(weapon);
+	return true;
     }
 
+    /**
+     * Unequips the current weapon, returning it to the inventory.
+     */
     public void unequipWeapon() {
 	this.putCurrentWeaponInInventory();
 	this.weapon = Reference.DEFAULT_WEAPON;
     }
 
+    /**
+     * Gets the Armor item corresponding to the provided ArmorSlot
+     * @param slot the ArmorSlot Enum object for which an Armor item is desired
+     * @return an Armor item corresponding to the provided ArmorSlot. Null if empty.
+     */
+    public Armor getArmorInSlot(ArmorSlot slot) {
+	return this.armor.get(slot);
+    }
+
+    /**
+     * Causes the Entity to put on a piece of armor, returning the current armor to the inventory.
+     * @param slot The slot into which the provided armor should be equipped.
+     * @param armor The armor to equip.
+     * @return True if the equip was successful. False if it was not.
+     */
+    public boolean equipArmor(ArmorSlot slot, Armor armor) {
+	this.putCurrentArmorInInventory(slot);
+	this.armor.put(slot, armor);
+	this.getInventory().removeItem(armor);
+	return true;
+    }
+
+    private void putCurrentArmorInInventory(ArmorSlot slot) {
+	// TODO Auto-generated method stub
+
+    }
+
     private void putCurrentWeaponInInventory() {
 	if (this.weapon != null && this.weapon != Reference.DEFAULT_WEAPON) {
-	    inventory.addItem(this.weapon);
+	    inventory.addItem(this.weapon, 1);
 	}
     }
 
+    /**
+     * Directly accesses the Entity's Inventory
+     * @return the Inventory object stored by the Entity
+     */
     public Inventory getInventory() {
 	return inventory;
     }
@@ -160,54 +205,54 @@ public abstract class Entity {
 
 	return thisGuy.toString();
     }
-    
+
     public boolean successfullyHits(RoundInfoContainer roundInfo) {
+	//TODO: Change this so that each weapon determines if it hits or not, instead of the player.
 	int difficultyCheck = 10;
 	int defenderModifier = 0;
 	int attackerModifier = 0;
 	int numberOfAttributesUsed = 0;
 	List<Attribute> usedToCheck = new ArrayList<Attribute>();
 	if (roundInfo.hasAttributes()) {
-	    for (Attribute attribute:Attribute.values()) {
+	    for (Attribute attribute : Attribute.values()) {
 		if (roundInfo.hasThisAttribute(attribute)) {
-		    numberOfAttributesUsed ++;
+		    numberOfAttributesUsed++;
 		    usedToCheck.add(attribute);
 		    defenderModifier += roundInfo.getValueForAttribute(attribute);
 		    attackerModifier += roundInfo.getAttacker().getAttribute(attribute);
 		}
-		
+
 		if (defenderModifier > 0 && numberOfAttributesUsed > 1) {
-		    defenderModifier = defenderModifier/numberOfAttributesUsed;
+		    defenderModifier = defenderModifier / numberOfAttributesUsed;
 		    if (attackerModifier > 0) {
-			attackerModifier = attackerModifier/numberOfAttributesUsed;
+			attackerModifier = attackerModifier / numberOfAttributesUsed;
 		    }
 		}
-		
-		
+
 	    }
 	}
-	
-	
-	
+
 	difficultyCheck += defenderModifier;
-	
-	
-	
+
 	return (difficultyCheck > Dice.D10.roll() + attackerModifier);
     }
 
+    /**
+     * Reduces the Entity's health by some amount, determined by using the information contained in the provided RoundInfoContainer object.
+     * @param damage The RoundInfoContainer object contains several bits of information that help the entity determine how much damage it takes.
+     * @return The amount that the Entity was damaged, as an int.
+     */
     public int hurt(RoundInfoContainer damage) {
-	System.out.println("this has been reached");
 	int toReturn = damage.getAmount();
 
-	if (damage.hasAttributes()) {
+	/*if (damage.hasAttributes()) {
 	    if (damage.hasEntity()) {
 		for (Attribute attribute : damage.getToCheckAgainst().keySet()) {
 		    int modifier = damage.getToCheckAgainst().get(attribute) - this.getAttribute(attribute);
 		    toReturn += modifier;
 		}
 	    }
-	}
+	}*/
 
 	if (toReturn <= 0) {
 	    toReturn = 1;
@@ -216,87 +261,52 @@ public abstract class Entity {
 	return toReturn;
     }
 
+    /**
+     * Called when the Entity is to attack another Entity using their equipped weapon.
+     * @param entity The entity to be attacked.
+     * @return The damage done to the attacked entity, as an int.
+     */
+    
     public int attack(Entity entity) {
 
 	return this.getWeapon().use(this, entity);
     }
 
+    /**
+     * Called if the Entity is to attack another Entity using a CombatUsable object other then their equipped weapon.
+     * @param entity The entity to be attacked.
+     * @param combatUsable The CombatUsable object with which the Entity is to make their attack.
+     * @return A numerical representation of the attack result. Usually the damage done, but it could be different if the CombatUsable item doesn't effect the target's health.
+     */
     public int attackUsing(Entity entity, CombatUsable combatUsable) {
 	return combatUsable.use(this, entity);
     }
 
-    public void attack(Entity... entities) {
-	for (Entity entity : entities) {
-	    this.attack(entity);
-	}
-    }
-
+    /**
+     * Gets the Weapon-class item currently equiped by the player
+     * @return The Weapon currently held in the player's Weapon slot.
+     */
     public Weapon getWeapon() {
 	return weapon;
     }
 
+    /**
+     * Changes the Entity's name.
+     * @param newName The desired new name.
+     */
     public void rename(String newName) {
 	this.name = newName;
     }
-}
 
-class StatMaker {
 
-    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, List<Attribute> buffed, List<Attribute> nerfed) {
-	Map<Attribute, Integer> toReturn = new HashMap<Attribute, Integer>();
-	if (buffed == null) {
-	    buffed = new ArrayList<Attribute>();
-	}
-	if (nerfed == null) {
-	    nerfed = new ArrayList<Attribute>();
-	}
-	if (experience < 100) {
-	    experience = 100;
-	}
-	int level = Reference.WHAT_LEVEL(experience);
-
-	for (Attribute attribute : Attribute.values()) {
-	    int stat = (random) ? Dice.D3.roll() + Dice.D3.roll() + Dice.D3.roll() : 6;
-	    if (buffed.contains(attribute)) {
-		System.out.println("buffed will be " + attribute.name());
-		stat += 1;
-	    } 
-
-	    if (nerfed.contains(attribute)) {
-		System.out.println("nerfed will be " + attribute.name());
-		stat -= 1;
-	    }
-
-	    if (attribute == Attribute.EXPERIENCE) {
-		stat = experience;
-	    } else if (attribute == Attribute.CURRENT_HEALTH) {
-		stat = toReturn.get(Attribute.MAX_HEALTH);
-	    } else if (attribute == Attribute.CURRENT_HUNGER) {
-		stat = toReturn.get(Attribute.MAX_HUNGER);
-	    } else if (attribute == Attribute.CURRENT_MAGIC_POINTS) {
-		stat = toReturn.get(Attribute.MAX_MAGIC_POINTS);
-	    } else {
-		// stat += level;
-
-	    }
-
-	    toReturn.put(attribute, stat);
-	}
-	return toReturn;
+    /**
+     * Each new instance of Entity is unique. Even with the same name, weapon, etc, two Entity class objects are not to be equal unless they are, indeed, the same instance.
+     */
+    @Override
+    public int hashCode() {
+	return name.hashCode()+salt;
     }
 
-    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, Attribute[] buffed, Attribute[] nerfed) {
-	return makeAttributeMap(random, experience, Arrays.asList(buffed), Arrays.asList(nerfed));
-    }
-
-    public static Map<Attribute, Integer> makeAttributeMap(boolean random, int experience) {
-	return makeAttributeMap(random, experience, new ArrayList<Attribute>(), new ArrayList<Attribute>());
-    }
-
-    public static Map<Attribute, Integer> makeAttributeMap(boolean random) {
-	return makeAttributeMap(random, 100, new ArrayList<Attribute>(), new ArrayList<Attribute>());
-    }
-
-
-
+    
+    
 }

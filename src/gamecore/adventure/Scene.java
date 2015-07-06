@@ -3,6 +3,7 @@ package gamecore.adventure;
 import gamecore.Inventory;
 import gamecore.entity.Attribute;
 import gamecore.entity.Entity;
+import gamecore.item.CombatUsable;
 import gamecore.item.Item;
 import gamecore.location.Encounter;
 
@@ -77,8 +78,11 @@ public class Scene {
 	List<CombatCommand> toReturn = new ArrayList<CombatCommand>();
 	Inventory playerInventory = this.playerCharacter.getInventory();
 	for (Item item : playerInventory.getItems()) {
-	    if (item.hasCombatTag(CombatTag.USEABLE_FROM_INVENTORY)) {
-		toReturn.add(new CombatCommand(CombatCommandType.USE_ITEM, (CombatUsable) item, "Use " + item.getName()));
+	    if (item instanceof CombatUsable) {
+		CombatUsable combatItem = (CombatUsable) item;
+		if (combatItem.hasCombatTag(CombatTag.USEABLE_FROM_INVENTORY)) {
+		    toReturn.add(new CombatCommand(CombatCommandType.USE_ITEM, combatItem, "Use " + item.getName()));
+		}
 	    }
 	}
 	return toReturn;
@@ -91,7 +95,7 @@ public class Scene {
     private List<CombatCommand> getWeaponCommand() {
 	List<CombatCommand> toReturn = new ArrayList<CombatCommand>();
 
-	toReturn.add(new CombatCommand(CombatCommandType.ATTACK_WITH_WEAPON, playerCharacter.getWeapon(), playerCharacter.getWeapon().getName()));
+	toReturn.add(new CombatCommand(CombatCommandType.ATTACK_WITH_WEAPON, (CombatUsable) playerCharacter.getWeapon(), playerCharacter.getWeapon().getName()));
 
 	return toReturn;
     }
@@ -107,7 +111,7 @@ public class Scene {
 	if (this.currentCommands.get(commandIndex).getUsable().hasCombatTag(CombatTag.HARMS_OPPONENT)) {
 
 	    if (this.playerCharacter.successfullyHits(new RoundInfoContainer(this.getPlayerCharacter(), this.encounter.getEntityToFight(), this.playerCharacter.getWeapon(), this.playerCharacter.getWeapon().getPotency(), this.playerCharacter.getWeapon().getAttackUsing()))) {
-		    toReturn.addMessage(MessageType.OPPONENT_DAMAGE_TAKEN, "The enemy took " + playerCharacter.attackUsing(encounter.getEntityToFight(), this.currentCommands.get(commandIndex).getUsable()) + " damage.");
+		toReturn.addMessage(MessageType.OPPONENT_DAMAGE_TAKEN, "The enemy took " + playerCharacter.attackUsing(encounter.getEntityToFight(), this.currentCommands.get(commandIndex).getUsable()) + " damage.");
 
 	    } else {
 		toReturn.addMessage(MessageType.ATTACK_MISS, "Sorry, your attack missed");

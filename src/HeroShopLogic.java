@@ -22,7 +22,7 @@ public class HeroShopLogic {
      *            the command line arguments
      */
     public static void main(String[] args) {
-	GameController controller = new GameController();
+	GameController controller = GameController.getInstance();
 	Random rand = new Random();
 	Scanner scanner = new Scanner(System.in);
 
