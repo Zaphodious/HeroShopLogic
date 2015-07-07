@@ -21,17 +21,21 @@ public final class GameController {
     private List<Entity> employees;
     private Area testingArea;
     EmploymentPosition testEmployee;
-    
 
     private GameController() {
-	playerCharacter = new EntityBuilder("Marco",EntityType.PLAYER_CHARACTER).statsToBuff(Attribute.ATK_STRENGTH).statsToNerf(Attribute.DEF_DEXTERITY).build();//new Hero(true,"Marco", 100, buffed, nerfed, EntityType.PLAYER_CHARACTER);
+	playerCharacter = new EntityBuilder("Marco", EntityType.PLAYER_CHARACTER).statsToBuff(Attribute.ATK_STRENGTH).statsToNerf(Attribute.DEF_DEXTERITY).build();// new
+																				   // Hero(true,"Marco",
+																				   // 100,
+																				   // buffed,
+																				   // nerfed,
+																				   // EntityType.PLAYER_CHARACTER);
 	this.sideKick = new EntityBuilder("Zabroni", EntityType.HERO).build();
 	setEmployees(new ArrayList<Entity>());
 	testingArea = new Area(1);
 	testEmployee = new EmploymentPosition();
-	
-	testingArea.addEncounters(new Encounter.Builder("Hark! A Goblin!").setEntityToFight(new EntityBuilder("Goblin",EntityType.MONSTER).build()).setExperienceReward(3).build(),
-		new Encounter.Builder("Ew, a rat").setEntityToFight(new EntityBuilder("Rat",EntityType.MONSTER).build()).setExperienceReward(2).setLikelihood(50).build());
+
+	testingArea.addEncounters(new Encounter.Builder("Hark! A Goblin!").setEntityToFight(new EntityBuilder("Goblin", EntityType.MONSTER).build()).setExperienceReward(3).build(),
+		new Encounter.Builder("Ew, a rat").setEntityToFight(new EntityBuilder("Rat", EntityType.MONSTER).build()).setExperienceReward(2).setLikelihood(50).build());
     }
 
     public void nameThePlayer(String name) {
@@ -63,15 +67,15 @@ public final class GameController {
     }
 
     public void reRoll(String name) {
-	this.playerCharacter = new EntityBuilder(name,EntityType.PLAYER_CHARACTER).statsToBuff(Attribute.ATK_STRENGTH).statsToNerf(Attribute.DEF_DEXTERITY).build();
+	this.playerCharacter = new EntityBuilder(name, EntityType.PLAYER_CHARACTER).statsToBuff(Attribute.ATK_STRENGTH).statsToNerf(Attribute.DEF_DEXTERITY).build();
     }
-    
+
     public Encounter randomEncounter() {
 	return testingArea.getRandomEncounter();
     }
-    
+
     private static GameController gameControllerInstance;
-    
+
     public static GameController getInstance() {
 	if (gameControllerInstance == null) {
 	    gameControllerInstance = new GameController();
@@ -81,9 +85,7 @@ public final class GameController {
     }
 
     public EmploymentPosition getTestEmployee() {
-        return testEmployee;
+	return testEmployee;
     }
-    
-    
 
 }

@@ -17,15 +17,14 @@ public class Inventory {
 	contents = ZaphUtil.newMap();
 	this.maxWeight = maxWeight;
     }
-   
 
     public Inventory() {
 	this(25);
     }
-    
+
     public Inventory(Item... items) {
 	contents = ZaphUtil.newMap();
-	for (Item item:items) {
+	for (Item item : items) {
 	    this.currentWeight += item.getWeight();
 	    this.addItem(item);
 	}
@@ -33,15 +32,15 @@ public class Inventory {
 
     public boolean addItem(Item item, int amount) {
 	int previousAmount = 0;
-	if ((item.getWeight()*amount) + this.currentWeight > this.maxWeight) {
+	if ((item.getWeight() * amount) + this.currentWeight > this.maxWeight) {
 	    return false;
 	}
 	if (contents.containsKey(item) && item.isStackable()) {
-	    
+
 	    previousAmount = contents.get(item);
-	} 
-	    contents.put(item, amount + previousAmount);
-	
+	}
+	contents.put(item, amount + previousAmount);
+
 	this.currentWeight += item.getWeight();
 	return true;
     }
@@ -62,14 +61,14 @@ public class Inventory {
 	}
 	return toReturn;
     }
-    
-    public Map<Item,Integer> getItemMap() {
-	Map<Item,Integer> toReturn = ZaphUtil.newMap();
-	
+
+    public Map<Item, Integer> getItemMap() {
+	Map<Item, Integer> toReturn = ZaphUtil.newMap();
+
 	for (Item item : this.contents.keySet()) {
 	    toReturn.put(item, contents.get(item));
 	}
-	
+
 	return toReturn;
     }
 
@@ -96,51 +95,51 @@ public class Inventory {
 	}
 	return toReturn;
     }
-    
+
     public int removeItem(Item item, int amount) {
 	int numberItemsRemoved = 0;
 	for (int i = 0; i < amount; i--) {
-	    numberItemsRemoved += (this.removeItem(item)) ? 1:0;
+	    numberItemsRemoved += (this.removeItem(item)) ? 1 : 0;
 	}
 	return numberItemsRemoved;
     }
 
     public boolean removeItem(Item item) {
-	
+
 	if (this.contents.containsKey(item)) {
-	    
+
 	    int oldValue = contents.get(item);
-	    contents.put(item, oldValue-1);
+	    contents.put(item, oldValue - 1);
 	    this.currentWeight -= item.getWeight();
 	    contents.remove(item);
-	    
+
 	}
 	return false;
-	
+
     }
 
     public boolean addOtherInventory(Inventory otherInventory) {
-	
+
 	if (this.currentWeight + otherInventory.currentWeight > this.getMaxWeight()) {
 	    return false;
 	}
-	
+
 	for (Item item : otherInventory.contents.keySet()) {
 	    this.addItem(item, otherInventory.contents.get(item));
 	}
 	return true;
     }
-    
+
     public boolean moveInventoryToThis(Inventory otherInventory) {
 	if (!this.addOtherInventory(otherInventory)) {
 	    List<Item> toDelete = ZaphUtil.newList();
 	    for (Item item : otherInventory.contents.keySet()) {
-		    if(this.addItem(item, otherInventory.contents.get(item))) {
-			toDelete.add(item);
-		    }
-		    
+		if (this.addItem(item, otherInventory.contents.get(item))) {
+		    toDelete.add(item);
 		}
-	    
+
+	    }
+
 	    for (Item item : toDelete) {
 		otherInventory.contents.remove(item);
 	    }
@@ -167,13 +166,12 @@ public class Inventory {
 	StringBuilder toReturn = new StringBuilder();
 	toReturn.append("maxWeight=" + maxWeight + "\n");
 	toReturn.append("currentWeight=" + currentWeight + "\n");
-	
-	for (Item item:contents.keySet()) {
+
+	for (Item item : contents.keySet()) {
 	    toReturn.append(item.toString() + "\n");
 	}
-	
+
 	return toReturn.toString();
     }
-    
-    
+
 }

@@ -6,6 +6,5 @@ public enum CombatTag {
     HEALS_PLAYER(),
     USEABLE_FROM_INVENTORY(),
     ENDS_COMBAT_ON_USE();
-    
-    
+
 }

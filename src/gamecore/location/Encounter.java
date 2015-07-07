@@ -54,27 +54,27 @@ public final class Encounter {
 	    this.isCombat = true;
 	    return this;
 	}
-	
+
 	public Builder setEncounterImage(String image) {
 	    this.image = image;
 	    return this;
 	}
-	
+
 	public Builder setLikelihood(int likelihood) throws IllegalArgumentException {
 	    if (likelihood > 0 && likelihood < 100) {
-		    this.likelihood = likelihood;
-		} else {
-		    throw new IllegalArgumentException("Encounter likelihood must be between 1 (absurdly rare) and 100 (extremely common)");
-		}
-	    
+		this.likelihood = likelihood;
+	    } else {
+		throw new IllegalArgumentException("Encounter likelihood must be between 1 (absurdly rare) and 100 (extremely common)");
+	    }
+
 	    return this;
 	}
-	
+
 	public Encounter build() {
 	    return new Encounter(this);
 	}
     }
-    
+
     private Encounter(Builder builder) {
 	this.isCombat = builder.isCombat;
 	this.rewardsWithExperience = builder.rewardsWithExperience;
@@ -86,7 +86,6 @@ public final class Encounter {
 	this.likelihood = builder.likelihood;
 	this.experienceReward = builder.expereinceReward;
     }
-
 
     public boolean isCombat() {
 	return isCombat;
@@ -112,12 +111,11 @@ public final class Encounter {
 	Inventory toReturn = new Inventory();
 	for (ItemDrop drop : this.itemReward) {
 	    if (drop.doesDrop()) {
-		toReturn.addItem(drop.getItem(),drop.getDropAmount());
+		toReturn.addItem(drop.getItem(), drop.getDropAmount());
 	    }
 	}
 	return toReturn;
     }
-
 
     public String getImage() {
 	return image;
@@ -134,7 +132,7 @@ public final class Encounter {
     public int getLikelihood() {
 	return likelihood;
     }
-    
+
     public int getExperienceReward() {
 	return this.experienceReward;
     }

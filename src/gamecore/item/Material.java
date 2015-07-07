@@ -1,13 +1,14 @@
 package gamecore.item;
 
-
 /**
- * This class is used for items used only for crafting/selling. It provides no functionality other then that specified in the Item interface.
+ * This class is used for items used only for crafting/selling. It provides no
+ * functionality other then that specified in the Item interface.
+ * 
  * @author Alex Chythlook
  *
  */
 public final class Material implements Item {
-    
+
     private String name;
     private ItemType type;
     private int potency;
@@ -16,7 +17,7 @@ public final class Material implements Item {
     protected int saleValue;
     protected int saleDifficulty;
     protected Rarity rarity;
-    
+
     public Material(ItemBuilder builder) {
 	this.name = builder.getName();
 	this.type = builder.getType();
@@ -26,23 +27,23 @@ public final class Material implements Item {
     }
 
     public String getName() {
-        return name;
+	return name;
     }
 
     public ItemType getType() {
-        return type;
+	return type;
     }
 
     public int getPotency() {
-        return potency;
+	return potency;
     }
 
     public int getWeight() {
-        return weight;
+	return weight;
     }
 
     public boolean isStackable() {
-        return isStackable;
+	return isStackable;
     }
 
     @Override
@@ -64,9 +65,5 @@ public final class Material implements Item {
     public String toString() {
 	return "Material [name=" + name + "]";
     }
-
-
-    
-
 
 }

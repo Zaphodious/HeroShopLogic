@@ -7,24 +7,25 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class ZaphUtil {
-    private ZaphUtil(){}
-    
-    public static <K,V> Map<K,V> newMap() {
+    private ZaphUtil() {
+    }
+
+    public static <K, V> Map<K, V> newMap() {
 	return new HashMap<K, V>();
     }
-    
+
     public static <K> List<K> newList() {
 	return new ArrayList<K>();
     }
-    
+
     public static int secondsPassed(int startTime) {
-        return getSecondsTimeStamp() - startTime;
+	return getSecondsTimeStamp() - startTime;
     }
-    
+
     public static int getSecondsTimeStamp() {
 	return (int) TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
     }
-    
+
     public static boolean isWithinCentRange(int toCheck) {
 	if (toCheck > 0 && toCheck < 100) {
 	    return true;

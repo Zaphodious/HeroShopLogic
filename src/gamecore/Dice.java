@@ -1,8 +1,12 @@
 package gamecore;
 
 import java.util.Random;
+
 /**
- * Each Dice object represents a die with a number of sides corresponding to the number coming after "D". This follows the convention of RPGs using polyhedral dice to determine random numbers.
+ * Each Dice object represents a die with a number of sides corresponding to the
+ * number coming after "D". This follows the convention of RPGs using polyhedral
+ * dice to determine random numbers.
+ * 
  * @author Alex Chythlook
  *
  */

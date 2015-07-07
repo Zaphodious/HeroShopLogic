@@ -36,17 +36,16 @@ public class EmploymentPosition {
 	possibleResults = ZaphUtil.newList();
 	collected = new Inventory();
 
-	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 100", BasicItemType.MATERIAL).setWeight(0).build(), 100));
-	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 80", BasicItemType.MATERIAL).setWeight(0).build(), 80));
-	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 40", BasicItemType.MATERIAL).setWeight(0).build(), 40));
-	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 20", BasicItemType.MATERIAL).setWeight(0).build(), 20).setAmountToDrop(Dice.D3));
+	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 100", BasicItemType.MATERIAL).build(), 100));
+	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 80", BasicItemType.MATERIAL).build(), 80));
+	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 40", BasicItemType.MATERIAL).build(), 40));
+	possibleResults.add(new ItemDrop(new ItemBuilder("Test Item 20", BasicItemType.MATERIAL).build(), 20).setAmountToDrop(Dice.D3));
 
     }
 
     public boolean dropOff() {
 	return Storefront.getInstance().acceptItems(this.collected);
     }
-	
 
     private void cycleThroughPossibleResults() {
 	for (int i = 0; i < this.howManyChances(); i++) {
@@ -84,13 +83,13 @@ public class EmploymentPosition {
 	    this.cycleThroughPossibleResults();
 	    int collectedItems = this.howManyChances();
 	    resetChances();
-	    
+
 	    return collectedItems;
 	}
 	return 0;
     }
 
-    public Map<Item,Integer> getItemsCollectedSoFar() {
+    public Map<Item, Integer> getItemsCollectedSoFar() {
 	return this.collected.getItemMap();
     }
 

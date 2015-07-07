@@ -2,6 +2,7 @@ package gamecore.entity;
 
 /**
  * Identifying tags for Entities.
+ * 
  * @author Alex Chythlook
  *
  */
@@ -19,22 +20,21 @@ public enum EntityType {
      * Entities encounter that are hostile to the player.
      */
     MONSTER("monster");
-    
+
     private String name;
-    
+
     EntityType(String name) {
 	this.name = name;
     }
 
-
-
     /**
-     * For testing purposes, this makes it somewhat easier to output the type of Entity to the console.
+     * For testing purposes, this makes it somewhat easier to output the type of
+     * Entity to the console.
+     * 
      * @return The name of the EntityType as a String.
      */
     public String getName() {
-        return name;
+	return name;
     }
-    
-    
+
 }

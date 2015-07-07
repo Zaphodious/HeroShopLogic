@@ -7,7 +7,6 @@ import gamecore.entity.Entity;
 
 public enum BasicWeaponType implements WeaponType {
 
-    
     SWORD(Attribute.ATK_STRENGTH) {
 	@Override
 	public int attack(Weapon weapon, Entity user, Entity target) {
@@ -27,7 +26,7 @@ public enum BasicWeaponType implements WeaponType {
 	public int attack(Weapon weapon, Entity user, Entity target) {
 	    int toReturn = 0;
 	    for (int i = 0; i < Dice.D6.roll(); i++) {
-		toReturn += target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency()/3, attackUsing));
+		toReturn += target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency() / 3, attackUsing));
 	    }
 	    return toReturn;
 	}
@@ -48,14 +47,14 @@ public enum BasicWeaponType implements WeaponType {
     };
 
     Attribute attackUsing;
-    
+
     private BasicWeaponType(Attribute attackUsing) {
 	this.attackUsing = attackUsing;
     }
-    
+
     @Override
     public abstract int attack(Weapon weapon, Entity user, Entity target);
-    
+
     public Attribute getAttackUsing() {
 	return this.attackUsing;
     }

@@ -43,7 +43,7 @@ public class TextInterface {
 	this.controller = controller;
 	this.breakSpace = ".-*-.-*-.-*-.-*-.-*-.-*-.-*-.";
     }
-    
+
     private String getInput() {
 	System.out.print("👉>");
 	return this.scanner.nextLine();
@@ -56,7 +56,6 @@ public class TextInterface {
 	while (true) {
 	    System.out.println("Please select from the following choices (use the number):");
 	    System.out.println("1:Character, 2:Inventory, 3:Adventure, 4:Shop, e:Exit");
-	    
 
 	    command = getInput();
 
@@ -95,7 +94,7 @@ public class TextInterface {
 	while (true) {
 	    System.out.println("Hero menu. Please select from the following options:");
 	    System.out.println("1:View Hero, 2:Change Hero Name, 3:Re-Roll Hero, e:Return to main menu");
-	    
+
 	    String command = getInput();
 
 	    switch (command) {
@@ -110,7 +109,7 @@ public class TextInterface {
 	    case "3":
 		System.out.println("Making a new hero!");
 		System.out.println("What should the hero's name be?");
-		
+
 		this.controller.reRoll(getInput());
 		break;
 	    case "e":
@@ -132,7 +131,6 @@ public class TextInterface {
 	    Item[] playerInventory = this.controller.getPlayerCharacter().getInventory().getItems();
 	    System.out.println("Inventory Menu. Please select from the following:");
 	    System.out.println("1:View inventory, 2:Add test data, 3:Remove Item, 4:Equip Weapon, e:Return to main menu");
-	   
 
 	    command = getInput();
 
@@ -232,7 +230,6 @@ public class TextInterface {
 		System.out.println(i + 1 + ": " + commands.get(i).getCommand());
 	    }
 
-	    
 	    String command = getInput();
 
 	    try {
@@ -256,10 +253,11 @@ public class TextInterface {
 	    System.out.println("Employees have " + this.controller.getTestEmployee().howManyChances() + " items available for pickup.");
 	    System.out.println("Time until next item: " + this.controller.getTestEmployee().secondsUntilNextChance());
 	    System.out.println("Shop Menu (alpha). Please select from the following items:");
-	    System.out.println("1:Wait a while, 2:Collect items, 3:Employee basket, 4:basket xFer to backroom, 5:Backroom, e:Return to main menu");
-	    
+	    System.out.println("1:Wait a while, 2:Collect items, 3:Employee basket, 4:basket xFer to backroom, ");
+	    System.out.println("5:Backroom, 6: backroom xFer to showroom, 7: Check sales, e:Return to main menu");
+
 	    String input = getInput();
-	    
+
 	    boolean toExit = false;
 	    switch (input) {
 	    case "1":
@@ -267,29 +265,30 @@ public class TextInterface {
 		break;
 	    case "2":
 		System.out.println("Employees have " + this.controller.getTestEmployee().howManyChances() + " items available for pickup.");
-		    System.out.println("Time until next item: " + this.controller.getTestEmployee().secondsUntilNextChance());
+		System.out.println("Time until next item: " + this.controller.getTestEmployee().secondsUntilNextChance());
 		System.out.println("Collecting items.");
 		int collected = this.controller.getTestEmployee().collectItems();
 		System.out.println("Collected " + collected + " items.");
-		
+
 		break;
-	    case "3": 
+	    case "3":
 
 		for (Item item : this.controller.getTestEmployee().getItemsCollectedSoFar().keySet()) {
 		    System.out.println(this.controller.getTestEmployee().getItemsCollectedSoFar().get(item) + "x " + item.toString());
 		}
 		break;
-	    case "4": if (this.controller.getTestEmployee().dropOff()) {
-		System.out.println("successfully drops off the items");
-	    } else {
-		System.out.println("We couldn't drop everything off, but we did what we could!");
-	    }
-	    break;
+	    case "4":
+		if (this.controller.getTestEmployee().dropOff()) {
+		    System.out.println("successfully drops off the items");
+		} else {
+		    System.out.println("We couldn't drop everything off, but we did what we could!");
+		}
+		break;
 	    case "5":
-	    Map<Item,Integer> backroom = Storefront.getInstance().getBackroom().getItemMap();
-	     for (Item item : backroom.keySet()) {
-		System.out.println(backroom.get(item) + "x " + item.toString());
-	    }
+		Map<Item, Integer> backroom = Storefront.getInstance().getBackroom().getItemMap();
+		for (Item item : backroom.keySet()) {
+		    System.out.println(backroom.get(item) + "x " + item.toString());
+		}
 		break;
 	    case "e":
 		System.out.println("returning to main menu.");

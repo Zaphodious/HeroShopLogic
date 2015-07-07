@@ -14,15 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-
 /**
- * The EntityBuilder class is the only legal way to instantiate a new Entity object. This class implements the Builder pattern as described in Effective Java.
+ * The EntityBuilder class is the only legal way to instantiate a new Entity
+ * object. This class implements the Builder pattern as described in Effective
+ * Java.
+ * 
  * @author Alex Chythlook
  *
  */
 public final class EntityBuilder {
-    
-    
+
     private String name = "Unnamed Entity";
 
     private Map<Attribute, Integer> stats;
@@ -53,8 +54,12 @@ public final class EntityBuilder {
 
     /**
      * Each Entity starts with a String name and an EntityType type.
-     * @param name The name of the Entity to be built.
-     * @param type The EntityType of the Entity to be built. Used for categorical purposes.
+     * 
+     * @param name
+     *            The name of the Entity to be built.
+     * @param type
+     *            The EntityType of the Entity to be built. Used for categorical
+     *            purposes.
      */
     public EntityBuilder(String name, EntityType type) {
 	this.name = name;
@@ -62,8 +67,11 @@ public final class EntityBuilder {
     }
 
     /**
-     * By default, stats will be determined at random. If specific stats are desired, however, this method can be invoked.
-     * @param statMap Must include one of each Attribute Enum object as a key. 
+     * By default, stats will be determined at random. If specific stats are
+     * desired, however, this method can be invoked.
+     * 
+     * @param statMap
+     *            Must include one of each Attribute Enum object as a key.
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder setStatMap(Map<Attribute, Integer> statMap) {
@@ -73,8 +81,14 @@ public final class EntityBuilder {
     }
 
     /**
-     * If one or more stats should be slightly higher then the others when they are generated, invoke this method and pass them through. The inverse of the statsToNerf function.
-     * @param attributesToBuff One or more Attribute enum objects. Each Attribute passed in will be slightly stronger then it normally would be, upon stat generation.
+     * If one or more stats should be slightly higher then the others when they
+     * are generated, invoke this method and pass them through. The inverse of
+     * the statsToNerf function.
+     * 
+     * @param attributesToBuff
+     *            One or more Attribute enum objects. Each Attribute passed in
+     *            will be slightly stronger then it normally would be, upon stat
+     *            generation.
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder statsToBuff(Attribute... attributesToBuff) {
@@ -83,8 +97,14 @@ public final class EntityBuilder {
     }
 
     /**
-     * If one or more stats should be slightly lower then the others when they are generated, invoke this method and pass them through. The inverse of the statsToBuff function.
-     * @param attributesToNerf One or more Attribute enum objects. Each Attribute passed in will be slightly weaker then it normally would be, upon stat generation.
+     * If one or more stats should be slightly lower then the others when they
+     * are generated, invoke this method and pass them through. The inverse of
+     * the statsToBuff function.
+     * 
+     * @param attributesToNerf
+     *            One or more Attribute enum objects. Each Attribute passed in
+     *            will be slightly weaker then it normally would be, upon stat
+     *            generation.
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder statsToNerf(Attribute... attributesToNerf) {
@@ -93,8 +113,13 @@ public final class EntityBuilder {
     }
 
     /**
-     * The Salt is used to make each individual Entity unique. By default these are generated randomly. If a spcific salt is desired, this method can be invoked.
-     * @param salt An int used to determine the unique identity of the new Entity.
+     * The Salt is used to make each individual Entity unique. By default these
+     * are generated randomly. If a spcific salt is desired, this method can be
+     * invoked.
+     * 
+     * @param salt
+     *            An int used to determine the unique identity of the new
+     *            Entity.
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder setSalt(int salt) {
@@ -104,9 +129,16 @@ public final class EntityBuilder {
     }
 
     /**
-     * Each Entity has an experience amount corresponding to its relative power. This value is used to determine its level. By default, an Entity starts with 100 experience (level 1 as of this version).<br/>
-     * It is recommended that this value be changed to something equivalent to the area that the Entity will be appearing in.
-     * @param experience A numerical representation of the new Entity's power. See the Reference class for more information about the formula used to determine levels.
+     * Each Entity has an experience amount corresponding to its relative power.
+     * This value is used to determine its level. By default, an Entity starts
+     * with 100 experience (level 1 as of this version).<br/>
+     * It is recommended that this value be changed to something equivalent to
+     * the area that the Entity will be appearing in.
+     * 
+     * @param experience
+     *            A numerical representation of the new Entity's power. See the
+     *            Reference class for more information about the formula used to
+     *            determine levels.
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder experience(int experience) {
@@ -115,16 +147,26 @@ public final class EntityBuilder {
     }
 
     /**
-     * stats are usually determined at random upon Entity creation. If this behavior is not desired, this method can be invoked. This sets the stat builder to provide the base stat amounts for each stat, modified by the stats set to be buffed and nerfed.
+     * stats are usually determined at random upon Entity creation. If this
+     * behavior is not desired, this method can be invoked. This sets the stat
+     * builder to provide the base stat amounts for each stat, modified by the
+     * stats set to be buffed and nerfed.
+     * 
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder statsNotRandom() {
 	this.rollStats = false;
 	return this;
     }
+
     /**
-     * Be default, each new Entity will be provided with an empty Inventory appropriate to their stats. This method can be called if the Entity is to have a specific inventory.
-     * @param inventory an instance of Inventory to be added to the new Entity, rather then the default stat-appropriate one provided at build.
+     * Be default, each new Entity will be provided with an empty Inventory
+     * appropriate to their stats. This method can be called if the Entity is to
+     * have a specific inventory.
+     * 
+     * @param inventory
+     *            an instance of Inventory to be added to the new Entity, rather
+     *            then the default stat-appropriate one provided at build.
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder setInventory(Inventory inventory) {
@@ -132,16 +174,20 @@ public final class EntityBuilder {
 	this.makeNewInventory = false;
 	return this;
     }
-    
+
     /**
-     * By default, a new Entity will be equipped with a basic, 1-power Dexterity weapon. This method can be invoked if a more appropriate weapon is to be held at build.
-     * @param weapon The weapon for the new Entity to be holding.
+     * By default, a new Entity will be equipped with a basic, 1-power Dexterity
+     * weapon. This method can be invoked if a more appropriate weapon is to be
+     * held at build.
+     * 
+     * @param weapon
+     *            The weapon for the new Entity to be holding.
      * @return The EntityBuilder instance, so that the method can be chained.
      */
     public EntityBuilder setWeapon(Weapon weapon) {
 	this.weapon = weapon;
 	return this;
-	
+
     }
 
     String getName() {
@@ -201,7 +247,9 @@ public final class EntityBuilder {
     }
 
     /**
-     * Crates a new Entity instance, using the parameters previously passed to the EntityBuilder object.
+     * Crates a new Entity instance, using the parameters previously passed to
+     * the EntityBuilder object.
+     * 
      * @return A new instance of Entity.
      */
     public Entity build() {
@@ -218,21 +266,18 @@ public final class EntityBuilder {
 	}
 
 	return new Entity(this);
-	
-	/*switch (this.type) {
-	case HERO:
-	    return new Hero(this);
-	case MONSTER:
-	    return new Monster(this);
-	case PLAYER_CHARACTER:
-	    return new Hero(this);
-	default:
-	    return new Monster(this);*/
 
-	}
-    
+	/*
+	 * switch (this.type) { case HERO: return new Hero(this); case MONSTER:
+	 * return new Monster(this); case PLAYER_CHARACTER: return new
+	 * Hero(this); default: return new Monster(this);
+	 */
+
+    }
+
     /*
-     * This method is used to generate stats for a new Entity, in the event that a complete map of stats wasn't passed in before build.
+     * This method is used to generate stats for a new Entity, in the event that
+     * a complete map of stats wasn't passed in before build.
      */
     private Map<Attribute, Integer> makeAttributeMap(boolean random, int experience, List<Attribute> buffed, List<Attribute> nerfed) {
 	Map<Attribute, Integer> toReturn = new HashMap<Attribute, Integer>();
@@ -276,6 +321,5 @@ public final class EntityBuilder {
 	}
 	return toReturn;
     }
-    
 
 }

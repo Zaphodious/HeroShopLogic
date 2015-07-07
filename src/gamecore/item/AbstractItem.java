@@ -1,7 +1,10 @@
 package gamecore.item;
 
 /**
- * This class provides basic implementation of the methods in the Item interface, primarily so that classes that wish to implement it don't have to write all of the implementation from scratch.
+ * This class provides basic implementation of the methods in the Item
+ * interface, primarily so that classes that wish to implement it don't have to
+ * write all of the implementation from scratch.
+ * 
  * @author Alex Chythlook
  *
  */
@@ -16,10 +19,10 @@ public abstract class AbstractItem implements Item {
 
     protected boolean stackable;
     protected boolean combatUsable;
-    
+
     protected int saleValue;
     protected int saleDifficulty;
-    
+
     protected Rarity rarity;
 
     protected AbstractItem(ItemBuilder builder) {
@@ -81,7 +84,5 @@ public abstract class AbstractItem implements Item {
     public int getSaleDifficulty() {
 	return saleDifficulty;
     }
-
-    
 
 }

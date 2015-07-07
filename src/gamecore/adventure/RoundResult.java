@@ -5,8 +5,8 @@ import java.util.List;
 
 public class RoundResult {
 
-    private List<CombatMessage> messages; 
-    
+    private List<CombatMessage> messages;
+
     public RoundResult() {
 	messages = new ArrayList<CombatMessage>();
     }
@@ -20,22 +20,22 @@ public class RoundResult {
 	}
 	return (String[]) toReturn.toArray();
     }
-    
+
     public List<String> getAllMessages() {
 	List<String> toReturn = new ArrayList<String>();
-	
+
 	for (CombatMessage message : messages) {
 	    toReturn.add(message.getMessageType().toString() + ": " + message.getMessageString());
 	}
-	
+
 	return toReturn;
     }
-    
+
     public void addMessage(MessageType messageType, String message) {
 	this.messages.add(new CombatMessage(messageType, message));
     }
-    
-     @Override
+
+    @Override
     public String toString() {
 	StringBuilder toReturn = new StringBuilder();
 	List<String> allMessages = getAllMessages();
@@ -44,6 +44,5 @@ public class RoundResult {
 	}
 	return toReturn.toString();
     }
-    
-    
+
 }

@@ -1,7 +1,5 @@
 package gamecore.item;
 
-
-
 public enum BasicItemType implements ItemType {
 
     FOOD("food") {
@@ -39,11 +37,9 @@ public enum BasicItemType implements ItemType {
 	    return new Potion(builder);
 	}
     };
-    
-    
-    
+
     private String name;
-    
+
     BasicItemType(String name) {
 	this.name = name;
     }
@@ -51,7 +47,5 @@ public enum BasicItemType implements ItemType {
     public String getName() {
 	return name;
     }
-    
-    
-    
+
 }

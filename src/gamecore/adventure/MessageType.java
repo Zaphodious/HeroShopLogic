@@ -16,16 +16,15 @@ public enum MessageType {
     EXPERIENCE_GAIN("experience drop"),
     WIN_MESSAGE("you won"),
     LOSE_MESSAGE("you lose");
-    
-    
+
     private String name;
-    
+
     MessageType(String name) {
 	this.name = name;
     }
-    
+
     public String toString() {
 	return this.name;
     }
-    
+
 }

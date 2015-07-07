@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The meat-and-potatoes of combat. Each Entity has a name, a set of attributes, a weapon slot, armor slots, an EntityType, and an Inventory.<br/>
+ * The meat-and-potatoes of combat. Each Entity has a name, a set of attributes,
+ * a weapon slot, armor slots, an EntityType, and an Inventory.<br/>
  * The only way to instantiate an Entity is through an EntityBuilder object.
+ * 
  * @author Alex Chythlook
  *
  */
@@ -30,7 +32,7 @@ public final class Entity {
 
     private Weapon weapon;
 
-    private  Map<ArmorSlot, Armor> armor;
+    private Map<ArmorSlot, Armor> armor;
 
     private Inventory inventory;
 
@@ -49,10 +51,11 @@ public final class Entity {
 	this.type = builder.getType();
     }
 
-
     /**
      * Used to get the int value of a given attribute.
-     * @param attribute The Attribute enum for which a value is desired.
+     * 
+     * @param attribute
+     *            The Attribute enum for which a value is desired.
      * @return The int value corrisponding to the supplied Attribute.
      */
     public int getAttribute(Attribute attribute) {
@@ -65,22 +68,28 @@ public final class Entity {
 
     }
 
-
     /**
      * Feeds the entity.
-     * @param hungerToAdd The potency of the food item/magic effect used to feed the player.
+     * 
+     * @param hungerToAdd
+     *            The potency of the food item/magic effect used to feed the
+     *            player.
      */
     public void feed(int hungerToAdd) {
-	//TODO: Make it so that if the player's hunger would go below 0, it goes to 0 instead.
-	
-	    this.changeAttribute(Attribute.CURRENT_HUNGER, hungerToAdd);
-	
+	// TODO: Make it so that if the player's hunger would go below 0, it
+	// goes to 0 instead.
+
+	this.changeAttribute(Attribute.CURRENT_HUNGER, hungerToAdd);
+
     }
 
     /**
      * Heals the entity by a certain amount. Overhealing possible.
-     * @param healthToAdd amount by which to heal the player
-     * @return True if the entity's health was not at or above the max. False otherwise.
+     * 
+     * @param healthToAdd
+     *            amount by which to heal the player
+     * @return True if the entity's health was not at or above the max. False
+     *         otherwise.
      */
     public boolean heal(int healthToAdd) {
 	if (this.getAttribute(Attribute.MAX_HEALTH) > this.getAttribute(Attribute.CURRENT_HEALTH)) {
@@ -90,22 +99,29 @@ public final class Entity {
 
 	return false;
     }
-    
+
     /**
      * Adds to the entity's gold count.
-     * @param goldToAdd The amount of gold to give the entity.
-     * @return False if the value would make the total gold count go below 0, True otherwise.
+     * 
+     * @param goldToAdd
+     *            The amount of gold to give the entity.
+     * @return False if the value would make the total gold count go below 0,
+     *         True otherwise.
      */
     public boolean giveGold(int goldToAdd) {
-	//TODO: make it so that if the gold count would go below zero, method returns false immediately.
+	// TODO: make it so that if the gold count would go below zero, method
+	// returns false immediately.
 	this.changeAttribute(Attribute.GOLD, goldToAdd);
 	return true;
     }
-    
+
     /**
      * Restores magic points. Over-restoring possible.
-     * @param magicPointsToAdd Amount of magic points to restore.
-     * @return True if the entity's magic point total was not at or above the max. False otherwise.
+     * 
+     * @param magicPointsToAdd
+     *            Amount of magic points to restore.
+     * @return True if the entity's magic point total was not at or above the
+     *         max. False otherwise.
      */
     public boolean restoreMP(int magicPointsToAdd) {
 	if (this.getAttribute(Attribute.MAX_MAGIC_POINTS) > this.getAttribute(Attribute.CURRENT_MAGIC_POINTS)) {
@@ -118,6 +134,7 @@ public final class Entity {
 
     /**
      * Gets the name of the player
+     * 
      * @return The player's name in String form.
      */
     public String getName() {
@@ -129,7 +146,9 @@ public final class Entity {
     }
 
     /**
-     * Equips the provided weapon, returning the currently-equpiped weapon to the inventory.
+     * Equips the provided weapon, returning the currently-equpiped weapon to
+     * the inventory.
+     * 
      * @param weapon
      * @return
      */
@@ -150,17 +169,24 @@ public final class Entity {
 
     /**
      * Gets the Armor item corresponding to the provided ArmorSlot
-     * @param slot the ArmorSlot Enum object for which an Armor item is desired
-     * @return an Armor item corresponding to the provided ArmorSlot. Null if empty.
+     * 
+     * @param slot
+     *            the ArmorSlot Enum object for which an Armor item is desired
+     * @return an Armor item corresponding to the provided ArmorSlot. Null if
+     *         empty.
      */
     public Armor getArmorInSlot(ArmorSlot slot) {
 	return this.armor.get(slot);
     }
 
     /**
-     * Causes the Entity to put on a piece of armor, returning the current armor to the inventory.
-     * @param slot The slot into which the provided armor should be equipped.
-     * @param armor The armor to equip.
+     * Causes the Entity to put on a piece of armor, returning the current armor
+     * to the inventory.
+     * 
+     * @param slot
+     *            The slot into which the provided armor should be equipped.
+     * @param armor
+     *            The armor to equip.
      * @return True if the equip was successful. False if it was not.
      */
     public boolean equipArmor(ArmorSlot slot, Armor armor) {
@@ -183,6 +209,7 @@ public final class Entity {
 
     /**
      * Directly accesses the Entity's Inventory
+     * 
      * @return the Inventory object stored by the Entity
      */
     public Inventory getInventory() {
@@ -207,7 +234,8 @@ public final class Entity {
     }
 
     public boolean successfullyHits(RoundInfoContainer roundInfo) {
-	//TODO: Change this so that each weapon determines if it hits or not, instead of the player.
+	// TODO: Change this so that each weapon determines if it hits or not,
+	// instead of the player.
 	int difficultyCheck = 10;
 	int defenderModifier = 0;
 	int attackerModifier = 0;
@@ -238,21 +266,24 @@ public final class Entity {
     }
 
     /**
-     * Reduces the Entity's health by some amount, determined by using the information contained in the provided RoundInfoContainer object.
-     * @param damage The RoundInfoContainer object contains several bits of information that help the entity determine how much damage it takes.
+     * Reduces the Entity's health by some amount, determined by using the
+     * information contained in the provided RoundInfoContainer object.
+     * 
+     * @param damage
+     *            The RoundInfoContainer object contains several bits of
+     *            information that help the entity determine how much damage it
+     *            takes.
      * @return The amount that the Entity was damaged, as an int.
      */
     public int hurt(RoundInfoContainer damage) {
 	int toReturn = damage.getAmount();
 
-	/*if (damage.hasAttributes()) {
-	    if (damage.hasEntity()) {
-		for (Attribute attribute : damage.getToCheckAgainst().keySet()) {
-		    int modifier = damage.getToCheckAgainst().get(attribute) - this.getAttribute(attribute);
-		    toReturn += modifier;
-		}
-	    }
-	}*/
+	/*
+	 * if (damage.hasAttributes()) { if (damage.hasEntity()) { for
+	 * (Attribute attribute : damage.getToCheckAgainst().keySet()) { int
+	 * modifier = damage.getToCheckAgainst().get(attribute) -
+	 * this.getAttribute(attribute); toReturn += modifier; } } }
+	 */
 
 	if (toReturn <= 0) {
 	    toReturn = 1;
@@ -262,21 +293,31 @@ public final class Entity {
     }
 
     /**
-     * Called when the Entity is to attack another Entity using their equipped weapon.
-     * @param entity The entity to be attacked.
+     * Called when the Entity is to attack another Entity using their equipped
+     * weapon.
+     * 
+     * @param entity
+     *            The entity to be attacked.
      * @return The damage done to the attacked entity, as an int.
      */
-    
+
     public int attack(Entity entity) {
 
 	return this.getWeapon().use(this, entity);
     }
 
     /**
-     * Called if the Entity is to attack another Entity using a CombatUsable object other then their equipped weapon.
-     * @param entity The entity to be attacked.
-     * @param combatUsable The CombatUsable object with which the Entity is to make their attack.
-     * @return A numerical representation of the attack result. Usually the damage done, but it could be different if the CombatUsable item doesn't effect the target's health.
+     * Called if the Entity is to attack another Entity using a CombatUsable
+     * object other then their equipped weapon.
+     * 
+     * @param entity
+     *            The entity to be attacked.
+     * @param combatUsable
+     *            The CombatUsable object with which the Entity is to make their
+     *            attack.
+     * @return A numerical representation of the attack result. Usually the
+     *         damage done, but it could be different if the CombatUsable item
+     *         doesn't effect the target's health.
      */
     public int attackUsing(Entity entity, CombatUsable combatUsable) {
 	return combatUsable.use(this, entity);
@@ -284,6 +325,7 @@ public final class Entity {
 
     /**
      * Gets the Weapon-class item currently equiped by the player
+     * 
      * @return The Weapon currently held in the player's Weapon slot.
      */
     public Weapon getWeapon() {
@@ -292,21 +334,22 @@ public final class Entity {
 
     /**
      * Changes the Entity's name.
-     * @param newName The desired new name.
+     * 
+     * @param newName
+     *            The desired new name.
      */
     public void rename(String newName) {
 	this.name = newName;
     }
 
-
     /**
-     * Each new instance of Entity is unique. Even with the same name, weapon, etc, two Entity class objects are not to be equal unless they are, indeed, the same instance.
+     * Each new instance of Entity is unique. Even with the same name, weapon,
+     * etc, two Entity class objects are not to be equal unless they are,
+     * indeed, the same instance.
      */
     @Override
     public int hashCode() {
-	return name.hashCode()+salt;
+	return name.hashCode() + salt;
     }
 
-    
-    
 }

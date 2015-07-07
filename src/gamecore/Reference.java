@@ -17,8 +17,8 @@ import java.util.List;
  * Created by achyt_000 on 6/24/2015.
  */
 public class Reference {
-    
-    public static final Weapon DEFAULT_WEAPON = (Weapon) new ItemBuilder("Fists of Fury",BasicItemType.WEAPON).notStackable().setWeaponType(BasicWeaponType.SHIV).setCombatTags(CombatTag.HARMS_OPPONENT).setPotency(1).build();
+
+    public static final Weapon DEFAULT_WEAPON = (Weapon) new ItemBuilder("Fists of Fury", BasicItemType.WEAPON).notStackable().setWeaponType(BasicWeaponType.SHIV).setCombatTags(CombatTag.HARMS_OPPONENT).setPotency(1).build();
 
     public static final int DEFAULT_MAX_STACK_SIZE = 42000;
     private static final int XP_MULTIPLIER = 100;
@@ -56,13 +56,13 @@ public class Reference {
 
     public static int STAT_ROLL() {
 	/*
-	 * This doesn't do anything in the rest of the program. I feel
-	 * proud of it, however, so it's remaining in until I put together my
-	 * own personal lib.
+	 * This doesn't do anything in the rest of the program. I feel proud of
+	 * it, however, so it's remaining in until I put together my own
+	 * personal lib.
 	 */
 
 	int toReturn = 0;
-	
+
 	int[] rolls = { Dice.D3.roll(), Dice.D3.roll(), Dice.D3.roll(), Dice.D3.roll() };
 	for (int i = 0; i < rolls.length; i++) {
 	    List<Boolean> isGreaterThen = new ArrayList<Boolean>();

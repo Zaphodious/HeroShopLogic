@@ -29,8 +29,6 @@ public class HeroShopLogic {
 	TextInterface textUI = new TextInterface(scanner, rand, controller);
 
 	textUI.startInterface();
-	
-	
 
     }
 
