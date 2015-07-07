@@ -18,8 +18,10 @@ import gamecore.item.ItemBuilder;
 import gamecore.item.UseTag;
 import gamecore.item.Weapon;
 import gamecore.location.Encounter;
+import gamecore.shop.Storefront;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -254,7 +256,7 @@ public class TextInterface {
 	    System.out.println("Employees have " + this.controller.getTestEmployee().howManyChances() + " items available for pickup.");
 	    System.out.println("Time until next item: " + this.controller.getTestEmployee().secondsUntilNextChance());
 	    System.out.println("Shop Menu (alpha). Please select from the following items:");
-	    System.out.println("1:Wait a while, 2:Collect items, e:Return to main menu");
+	    System.out.println("1:Wait a while, 2:Collect items, 3:Employee basket, 4:basket xFer to backroom, 5:Backroom, e:Return to main menu");
 	    
 	    String input = getInput();
 	    
@@ -270,6 +272,24 @@ public class TextInterface {
 		int collected = this.controller.getTestEmployee().collectItems();
 		System.out.println("Collected " + collected + " items.");
 		
+		break;
+	    case "3": 
+
+		for (Item item : this.controller.getTestEmployee().getItemsCollectedSoFar().keySet()) {
+		    System.out.println(this.controller.getTestEmployee().getItemsCollectedSoFar().get(item) + "x " + item.toString());
+		}
+		break;
+	    case "4": if (this.controller.getTestEmployee().dropOff()) {
+		System.out.println("successfully drops off the items");
+	    } else {
+		System.out.println("We couldn't drop everything off, but we did what we could!");
+	    }
+	    break;
+	    case "5":
+	    Map<Item,Integer> backroom = Storefront.getInstance().getBackroom().getItemMap();
+	     for (Item item : backroom.keySet()) {
+		System.out.println(backroom.get(item) + "x " + item.toString());
+	    }
 		break;
 	    case "e":
 		System.out.println("returning to main menu.");

@@ -36,13 +36,14 @@ public enum BasicWeaponType implements WeaponType {
 	@Override
 	public int attack(Weapon weapon, Entity user, Entity target) {
 	    // TODO Auto-generated method stub
-	    return 0;
+
+	    return target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency(), attackUsing));
 	}
     },
     SHIV(Attribute.ATK_DEXTERITY) {
 	@Override
 	public int attack(Weapon weapon, Entity user, Entity target) {
-	    return 0;
+	    return target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency(), attackUsing));
 	}
     };
 

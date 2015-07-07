@@ -13,7 +13,7 @@ public final class ItemDrop {
     int chanceToDrop;
     Dice rollForAmount;
     
-    private ItemDrop(Item itemToDrop, int chanceToDrop) {
+    public ItemDrop(Item itemToDrop, int chanceToDrop) {
 	super();
 	this.itemToDrop = itemToDrop;
 	this.chanceToDrop = chanceToDrop;

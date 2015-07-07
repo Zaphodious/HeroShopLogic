@@ -3,6 +3,7 @@ package gamecore;
 import gamecore.item.Item;
 import gamecore.item.ItemType;
 
+import java.util.List;
 import java.util.Map;
 
 public class Inventory {
@@ -32,7 +33,7 @@ public class Inventory {
 
     public boolean addItem(Item item, int amount) {
 	int previousAmount = 0;
-	if (item.getWeight() + this.currentWeight > this.maxWeight) {
+	if ((item.getWeight()*amount) + this.currentWeight > this.maxWeight) {
 	    return false;
 	}
 	if (contents.containsKey(item) && item.isStackable()) {
@@ -59,6 +60,16 @@ public class Inventory {
 	    }
 
 	}
+	return toReturn;
+    }
+    
+    public Map<Item,Integer> getItemMap() {
+	Map<Item,Integer> toReturn = ZaphUtil.newMap();
+	
+	for (Item item : this.contents.keySet()) {
+	    toReturn.put(item, contents.get(item));
+	}
+	
 	return toReturn;
     }
 
@@ -108,11 +119,35 @@ public class Inventory {
 	
     }
 
-    public void addOtherInventory(Inventory otherInventory) {
+    public boolean addOtherInventory(Inventory otherInventory) {
+	
+	if (this.currentWeight + otherInventory.currentWeight > this.getMaxWeight()) {
+	    return false;
+	}
 	
 	for (Item item : otherInventory.contents.keySet()) {
 	    this.addItem(item, otherInventory.contents.get(item));
 	}
+	return true;
+    }
+    
+    public boolean moveInventoryToThis(Inventory otherInventory) {
+	if (!this.addOtherInventory(otherInventory)) {
+	    List<Item> toDelete = ZaphUtil.newList();
+	    for (Item item : otherInventory.contents.keySet()) {
+		    if(this.addItem(item, otherInventory.contents.get(item))) {
+			toDelete.add(item);
+		    }
+		    
+		}
+	    
+	    for (Item item : toDelete) {
+		otherInventory.contents.remove(item);
+	    }
+	    return false;
+	}
+	otherInventory.contents.clear();
+	return true;
     }
 
     public int getMaxWeight() {

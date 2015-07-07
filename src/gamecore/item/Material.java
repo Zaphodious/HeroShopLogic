@@ -60,6 +60,11 @@ public final class Material implements Item {
 	return saleDifficulty;
     }
 
+    @Override
+    public String toString() {
+	return "Material [name=" + name + "]";
+    }
+
 
     
 
