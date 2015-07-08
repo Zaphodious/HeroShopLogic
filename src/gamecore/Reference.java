@@ -45,42 +45,8 @@ public class Reference {
 	return (deadLevel - victorLevel) + 3;
     }
 
-    public static Entity[] concat(Entity[] a, Entity[] b) {
-	int aLen = a.length;
-	int bLen = b.length;
-	Entity[] c = new Entity[aLen + bLen];
-	System.arraycopy(a, 0, c, 0, aLen);
-	System.arraycopy(b, 0, c, aLen, bLen);
-	return c;
-    }
+    
 
-    public static int STAT_ROLL() {
-	/*
-	 * This doesn't do anything in the rest of the program. I feel proud of
-	 * it, however, so it's remaining in until I put together my own
-	 * personal lib.
-	 */
-
-	int toReturn = 0;
-
-	int[] rolls = { Dice.D3.roll(), Dice.D3.roll(), Dice.D3.roll(), Dice.D3.roll() };
-	for (int i = 0; i < rolls.length; i++) {
-	    List<Boolean> isGreaterThen = new ArrayList<Boolean>();
-	    for (int j = 0; j < rolls.length; j++) {
-		// System.out.println("checking to see if " + rolls[i] +
-		// " is greater then " + rolls[j]);
-		isGreaterThen.add(j, rolls[i] > rolls[j]);
-	    }
-	    if (!isGreaterThen.contains(true)) {
-		System.out.print(rolls[i] + " was the lowest out of [" + rolls[0] + ", " + rolls[1] + ", " + rolls[2] + ", " + rolls[3] + "], ");
-		rolls[i] = 0;
-	    }
-
-	    toReturn += rolls[i];
-	}
-
-	System.out.println("and the end result was " + toReturn);
-	return toReturn;
-    }
+    
 
 }
