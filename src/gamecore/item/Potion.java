@@ -21,20 +21,23 @@ import java.util.List;
  */
 public final class Potion extends AbstractItem implements CombatUsable {
 
-    private PotionType potionType;
+    private final ItemSubtype defaultSubtype = BasicPotionType.HEALTH;
+    private ItemSubtype subtype;
     private UseTag useTag;
 
     Potion(ItemBuilder builder) {
 	super(builder);
 	this.combatTags = builder.getCombatTags();
 	this.useTag = builder.getUseTag();
+	this.subtype = (builder.hasSetSubtype()) ? builder.getItemSubtype() : this.defaultSubtype ;
     }
 
     private List<CombatTag> combatTags;
 
     @Override
     public int use(Entity user, Entity target) {
-	return potionType.applyEffect(this, user, target);
+	return subtype.activate(this, user, target);
+	
     }
 
     @Override

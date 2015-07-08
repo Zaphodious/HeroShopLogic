@@ -16,9 +16,10 @@ import java.util.List;
  */
 public final class Weapon extends AbstractItem implements CombatUsable {
 
+    private final ItemSubtype defaultSubtype = BasicWeaponType.SWORD;
     private int salt;
     private List<CombatTag> combatTags;
-    private WeaponType weaponType;
+    private ItemSubtype subtype;
     private UseTag useTag;
 
     /**
@@ -34,7 +35,7 @@ public final class Weapon extends AbstractItem implements CombatUsable {
 	// this.salt = (salt == 0) ? Dice.SALT.roll() : salt;
 	this.combatTags = new ArrayList<CombatTag>();
 	this.combatTags.add(CombatTag.HARMS_OPPONENT);
-	this.weaponType = builder.getWeaponType();
+	this.subtype = (builder.hasSetSubtype()) ? builder.getItemSubtype():this.defaultSubtype;
 	this.useTag = builder.getUseTag();
     }
 
@@ -63,7 +64,7 @@ public final class Weapon extends AbstractItem implements CombatUsable {
      *         successful.
      */
     public Attribute getAttackUsing() {
-	return weaponType.getAttackUsing();
+	return subtype.getRelevantAttribute();
     }
 
     /**
@@ -71,7 +72,7 @@ public final class Weapon extends AbstractItem implements CombatUsable {
      */
     @Override
     public int use(Entity user, Entity target) {
-	return weaponType.attack(this, user, target);
+	return this.subtype.activate(this, user, target);
     }
 
     @Override

@@ -161,8 +161,8 @@ public class TextInterface {
 		break;
 	    case "2":
 		System.out.println("Adding a whole mess of items!");
-		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Short Sword", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setWeaponType(BasicWeaponType.SWORD).setWeight(1).build());
-		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Battle Axe", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setWeaponType(BasicWeaponType.BATTLE_AXE).setWeight(1).build());
+		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Short Sword", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setItemSubtype(BasicWeaponType.SWORD).setWeight(1).build());
+		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Battle Axe", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setItemSubtype(BasicWeaponType.BATTLE_AXE).setWeight(1).build());
 		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Health Potion", BasicItemType.POTION).setCombatTags(CombatTag.USEABLE_FROM_INVENTORY, CombatTag.USEABLE_FROM_INVENTORY).setUseTag(UseTag.USABLE_ANYWHERE).setPotency(Dice.D6.roll()).setWeight(1).build(), Dice.D10.roll());
 
 		break;

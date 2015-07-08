@@ -5,25 +5,26 @@ import gamecore.adventure.RoundInfoContainer;
 import gamecore.entity.Attribute;
 import gamecore.entity.Entity;
 
-public enum BasicWeaponType implements WeaponType {
+public enum BasicWeaponType implements ItemSubtype {
 
     SWORD(Attribute.ATK_STRENGTH) {
 	@Override
-	public int attack(Weapon weapon, Entity user, Entity target) {
-	    // TODO Auto-generated method stub
+	public int activate(Item item, Entity user, Entity target) {
+	    Weapon weapon = (Weapon) item;
 	    return target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency(), attackUsing));
 	}
     },
     BATTLE_AXE(Attribute.ATK_STRENGTH) {
 	@Override
-	public int attack(Weapon weapon, Entity user, Entity target) {
-	    // TODO Auto-generated method stub
+	public int activate(Item item, Entity user, Entity target) {
+	    Weapon weapon = (Weapon) item;
 	    return target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency() * 2, attackUsing));
 	}
     },
     FLAIL(Attribute.ATK_STRENGTH) {
 	@Override
-	public int attack(Weapon weapon, Entity user, Entity target) {
+	public int activate(Item item, Entity user, Entity target) {
+	    Weapon weapon = (Weapon) item;
 	    int toReturn = 0;
 	    for (int i = 0; i < Dice.D6.roll(); i++) {
 		toReturn += target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency() / 3, attackUsing));
@@ -33,15 +34,15 @@ public enum BasicWeaponType implements WeaponType {
     },
     BOW(Attribute.ATK_DEXTERITY) {
 	@Override
-	public int attack(Weapon weapon, Entity user, Entity target) {
-	    // TODO Auto-generated method stub
-
+	public int activate(Item item, Entity user, Entity target) {
+	    Weapon weapon = (Weapon) item;
 	    return target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency(), attackUsing));
 	}
     },
     SHIV(Attribute.ATK_DEXTERITY) {
 	@Override
-	public int attack(Weapon weapon, Entity user, Entity target) {
+	public int activate(Item item, Entity user, Entity target) {
+	    Weapon weapon = (Weapon) item;
 	    return target.hurt(new RoundInfoContainer(user, target, weapon, weapon.getPotency(), attackUsing));
 	}
     };
@@ -53,9 +54,9 @@ public enum BasicWeaponType implements WeaponType {
     }
 
     @Override
-    public abstract int attack(Weapon weapon, Entity user, Entity target);
+    public abstract int activate(Item item, Entity user, Entity target);
 
-    public Attribute getAttackUsing() {
+    public Attribute getRelevantAttribute() {
 	return this.attackUsing;
     }
 

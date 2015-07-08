@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Reference {
 
-    public static final Weapon DEFAULT_WEAPON = (Weapon) new ItemBuilder("Fists of Fury", BasicItemType.WEAPON).notStackable().setWeaponType(BasicWeaponType.SHIV).setCombatTags(CombatTag.HARMS_OPPONENT).setPotency(1).build();
+    public static final Weapon DEFAULT_WEAPON = (Weapon) new ItemBuilder("Fists of Fury", BasicItemType.WEAPON).notStackable().setItemSubtype(BasicWeaponType.SHIV).setCombatTags(CombatTag.HARMS_OPPONENT).setPotency(1).build();
 
     public static final int DEFAULT_MAX_STACK_SIZE = 42000;
     private static final int XP_MULTIPLIER = 100;

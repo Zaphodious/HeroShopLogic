@@ -33,11 +33,11 @@ public final class ItemBuilder {
     private boolean rollSalt = true;
     private List<CombatTag> combatTags = ZaphUtil.newList();
     private UseTag useTag = UseTag.USABLE_OUT_OF_COMBAT;
-    private WeaponType weaponType = BasicWeaponType.SWORD;
-    private PotionType potionType = BasicPotionType.HEALTH;
     private int saleValue = 10;
     private int saleDifficulty = 50;
     private Rarity rarity = Rarity.COMMON;
+    private ItemSubtype subtype;
+    private boolean hasSetSubtype = false;
 
     /**
      * Item creation starts here. Each item needs a name and an ItemType.
@@ -183,11 +183,17 @@ public final class ItemBuilder {
      * @return This ItemBuilder instance, so that further setters can be
      *         chained.
      */
-    public ItemBuilder setWeaponType(WeaponType type) {
+    /*public ItemBuilder setWeaponType(WeaponType type) {
 	this.weaponType = type;
 	return this;
-    }
+    }*/
 
+    
+    public ItemBuilder setItemSubtype(ItemSubtype subtype) {
+	this.subtype = subtype;
+	this.hasSetSubtype = true;
+	return this;
+    }
     /**
      * By default, potions will be set to BasicPotionType.HEALTH. This function
      * is used if a different PotionType is desired.
@@ -197,10 +203,10 @@ public final class ItemBuilder {
      * @return This ItemBuilder instance, so that further setters can be
      *         chained.
      */
-    public ItemBuilder setPotionType(PotionType type) {
+/*    public ItemBuilder setPotionType(PotionType type) {
 	this.potionType = type;
 	return this;
-    }
+    }*/
 
     /**
      * By default, an item will be set to Rarity.COMMON. If an alternate rarty
@@ -248,64 +254,72 @@ public final class ItemBuilder {
 	return this;
     }
 
-    String getName() {
+    public String getName() {
 	return name;
     }
 
-    ItemType getType() {
+    public ItemType getType() {
 	return type;
     }
 
-    PotionType getPotionType() {
+/*    public PotionType getPotionType() {
 	return potionType;
-    }
+    }*/
 
-    int getPotency() {
+    public int getPotency() {
 	return potency;
     }
 
-    int getWeight() {
+    public int getWeight() {
 	return weight;
     }
 
-    boolean isStackable() {
+    public boolean isStackable() {
 	return stackable;
     }
 
-    boolean isCombatUsable() {
+    public boolean isCombatUsable() {
 	return combatUsable;
     }
 
-    int getSalt() {
+    public int getSalt() {
 	if (this.rollSalt) {
 	    return new Random().nextInt();
 	}
 	return salt;
     }
 
-    List<CombatTag> getCombatTags() {
+    public List<CombatTag> getCombatTags() {
 
 	return combatTags;
     }
 
-    UseTag getUseTag() {
+    public UseTag getUseTag() {
 
 	return this.useTag;
     }
 
-    WeaponType getWeaponType() {
+    /*WeaponType getWeaponType() {
 	return this.weaponType;
+    }*/
+    
+    public ItemSubtype getItemSubtype() {
+	return this.subtype;
+    }
+    
+    public boolean hasSetSubtype() {
+	return this.hasSetSubtype;
     }
 
-    int getSaleValue() {
+    public int getSaleValue() {
 	return saleValue;
     }
 
-    Rarity getRarity() {
+    public Rarity getRarity() {
 	return rarity;
     }
 
-    int getSaleDifficulty() {
+    public int getSaleDifficulty() {
 	return saleDifficulty;
     }
 
