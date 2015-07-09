@@ -95,7 +95,7 @@ public class Scene {
     private List<CombatCommand> getWeaponCommand() {
 	List<CombatCommand> toReturn = new ArrayList<CombatCommand>();
 
-	toReturn.add(new CombatCommand(CombatCommandType.ATTACK_WITH_WEAPON, (CombatUsable) playerCharacter.getWeapon(), playerCharacter.getWeapon().getName()));
+	toReturn.add(new CombatCommand(CombatCommandType.ATTACK_WITH_WEAPON, playerCharacter.getWeapon(), playerCharacter.getWeapon().getName()));
 
 	return toReturn;
     }

@@ -83,6 +83,7 @@ public enum BasicWeaponType implements ItemSubtype {
 
     }
 
+    @Override
     public Attribute getRelevantAttribute() {
 	return this.attackUsing;
     }

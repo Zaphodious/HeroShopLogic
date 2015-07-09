@@ -33,18 +33,22 @@ public abstract class AbstractItem implements Item {
 	this.type = builder.getType();
     }
 
+    @Override
     public boolean isStackable() {
 	return this.stackable;
     }
 
+    @Override
     public String getName() {
 	return name;
     }
 
+    @Override
     public ItemType getType() {
 	return this.type;
     }
 
+    @Override
     public int getPotency() {
 	return potency;
     }

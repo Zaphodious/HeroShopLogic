@@ -15,6 +15,7 @@ public enum BasicPotionType implements ItemSubtype {
 	}
     };
 
+    @Override
     public abstract UseMessage activate(UseEvent useEvent);
 
     @Override

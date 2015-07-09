@@ -14,14 +14,17 @@ public abstract class AbstractLocation implements Location {
 	this.name = name;
     }
 
+    @Override
     public List<Area> getAreas() {
 	return areas;
     }
 
+    @Override
     public String getName() {
 	return name;
     }
 
+    @Override
     public void addArea(Area area) {
 	areas.add(area);
     }

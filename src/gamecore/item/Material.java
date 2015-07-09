@@ -28,22 +28,27 @@ public final class Material implements Item {
 	this.saleDifficulty = builder.getSaleDifficulty();
     }
 
+    @Override
     public String getName() {
 	return name;
     }
 
+    @Override
     public ItemType getType() {
 	return type;
     }
 
+    @Override
     public int getPotency() {
 	return potency;
     }
 
+    @Override
     public int getWeight() {
 	return weight;
     }
 
+    @Override
     public boolean isStackable() {
 	return isStackable;
     }

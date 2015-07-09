@@ -21,7 +21,6 @@ import gamecore.item.Weapon;
 import gamecore.location.Encounter;
 import gamecore.shop.Storefront;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
