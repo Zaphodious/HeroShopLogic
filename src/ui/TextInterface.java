@@ -79,6 +79,8 @@ public class TextInterface {
 		break;
 	    case "e":
 		System.out.println("Exiting. Bye now!");
+		System.out.println("hit enter to close this window.");
+		scanner.nextLine();
 		return;
 	    default:
 		System.out.println("Sorry, that's not a valid command.");
