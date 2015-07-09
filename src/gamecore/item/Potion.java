@@ -1,6 +1,7 @@
 package gamecore.item;
 
 import gamecore.adventure.CombatTag;
+import gamecore.adventure.UseMessage;
 import gamecore.entity.Entity;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public final class Potion extends AbstractItem implements CombatUsable {
     private List<CombatTag> combatTags;
 
     @Override
-    public int use(Entity user, Entity target) {
-	return subtype.activate(this, user, target);
+    public UseMessage use(Entity user, Entity target) {
+	return subtype.activate(UseEvent.newInstance(user, target, this, 1));
 	
     }
 

@@ -1,5 +1,6 @@
 package gamecore.item;
 
+import gamecore.adventure.UseMessage;
 import gamecore.entity.Entity;
 
 /**
@@ -20,8 +21,8 @@ public class Armor extends AbstractItem implements Usable {
     }
 
     @Override
-    public int use(Entity user, Entity target) {
-	return 0;
+    public UseMessage use(Entity user, Entity target) {
+	return null;
     }
 
     @Override

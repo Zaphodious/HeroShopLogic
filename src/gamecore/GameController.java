@@ -34,8 +34,8 @@ public final class GameController {
 	testingArea = new Area(1);
 	testEmployee = new EmploymentPosition();
 
-	testingArea.addEncounters(new Encounter.Builder("Hark! A Goblin!").setEntityToFight(new EntityBuilder("Goblin", EntityType.MONSTER).build()).setExperienceReward(3).build(),
-		new Encounter.Builder("Ew, a rat").setEntityToFight(new EntityBuilder("Rat", EntityType.MONSTER).build()).setExperienceReward(2).setLikelihood(50).build());
+	testingArea.addEncounters(new Encounter.Builder("Hark! A Goblin!").setEntityToFight(new EntityBuilder("Goblin", EntityType.MONSTER)).setExperienceReward(3),
+		new Encounter.Builder("Ew, a rat").setEntityToFight(new EntityBuilder("Rat", EntityType.MONSTER)).setExperienceReward(2).setLikelihood(50));
     }
 
     public void nameThePlayer(String name) {

@@ -24,6 +24,8 @@ public final class Material implements Item {
 	this.potency = builder.getPotency();
 	this.weight = builder.getWeight();
 	this.isStackable = builder.isStackable();
+	this.saleValue = builder.getSaleValue();
+	this.saleDifficulty = builder.getSaleDifficulty();
     }
 
     public String getName() {

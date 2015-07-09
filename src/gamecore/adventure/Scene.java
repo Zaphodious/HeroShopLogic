@@ -107,24 +107,22 @@ public class Scene {
 	}
 
 	RoundResult toReturn = new RoundResult();
-
+	
 	if (this.currentCommands.get(commandIndex).getUsable().hasCombatTag(CombatTag.HARMS_OPPONENT)) {
 
-	    if (this.playerCharacter.successfullyHits(new RoundInfoContainer(this.getPlayerCharacter(), this.encounter.getEntityToFight(), this.playerCharacter.getWeapon(), this.playerCharacter.getWeapon().getPotency(), this.playerCharacter.getWeapon().getAttackUsing()))) {
-		toReturn.addMessage(MessageType.OPPONENT_DAMAGE_TAKEN, "The enemy took " + playerCharacter.attackUsing(encounter.getEntityToFight(), this.currentCommands.get(commandIndex).getUsable()) + " damage.");
-
-	    } else {
-		toReturn.addMessage(MessageType.ATTACK_MISS, "Sorry, your attack missed");
-	    }
-
+	    toReturn.addMessage(playerCharacter.attackUsing(encounter.getEntityToFight(), this.currentCommands.get(commandIndex).getUsable()));
+	    
 	}
 
 	if (this.currentCommands.get(commandIndex).getUsable().hasCombatTag(CombatTag.HEALS_PLAYER)) {
-	    toReturn.addMessage(MessageType.PLAYER_STAT_INCREASE, "The player was healed by " + playerCharacter.attackUsing(this.getPlayerCharacter(), this.currentCommands.get(commandIndex).getUsable()) + " points.");
+	    toReturn.addMessage(playerCharacter.attackUsing(this.getPlayerCharacter(), this.currentCommands.get(commandIndex).getUsable()));
 	}
-
-	toReturn.addMessage(MessageType.PLAYER_DAMAGE_TAKEN, "You took " + this.encounter.getEntityToFight().attack(playerCharacter) + " damage.");
 	boolean enemyAlive = (this.encounter.getEntityToFight().getAttribute(Attribute.CURRENT_HEALTH) > 0);
+	if (enemyAlive) {
+	    toReturn.addMessage(this.encounter.getEntityToFight().attack(playerCharacter));
+	}
+	
+	
 	boolean playerAlive = (this.playerCharacter.getAttribute(Attribute.CURRENT_HEALTH) > 0);
 	this.ongoing = enemyAlive && playerAlive;
 	if (!enemyAlive) {

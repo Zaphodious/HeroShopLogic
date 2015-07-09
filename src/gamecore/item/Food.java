@@ -1,5 +1,7 @@
 package gamecore.item;
 
+import gamecore.adventure.MessageType;
+import gamecore.adventure.UseMessage;
 import gamecore.entity.Entity;
 
 public class Food extends AbstractItem implements Usable {
@@ -26,9 +28,9 @@ public class Food extends AbstractItem implements Usable {
     }
 
     @Override
-    public int use(Entity user, Entity target) {
+    public UseMessage use(Entity user, Entity target) {
 	target.feed(potency);
-	return potency;
+	return UseMessage.newInstance(MessageType.PLAYER_FEED, "You eat, gaining " + potency + " more energy.");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package gamecore.item;
 
+import gamecore.adventure.UseMessage;
 import gamecore.entity.Entity;
 
 public interface Usable {
@@ -24,7 +25,7 @@ public interface Usable {
      *         health potion would return the amount of health the target has
      *         recovered.
      */
-    public int use(Entity user, Entity target);
+    public UseMessage use(Entity user, Entity target);
 
     /**
      * Use tags are used to determine the context in which this Usable object

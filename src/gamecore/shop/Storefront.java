@@ -6,11 +6,11 @@ public final class Storefront {
 
     private static Storefront singletonInstance;
 
-    private Inventory showroom;
+    private DisplayCase showcase;
     private Inventory backroom;
 
     private Storefront() {
-	this.showroom = new Inventory(1000);
+	this.showcase = new DisplayCase();
 	this.backroom = new Inventory(100);
     }
 
@@ -20,6 +20,23 @@ public final class Storefront {
 
     public Inventory getBackroom() {
 	return backroom;
+    }
+    
+    public boolean hasAnythingSold() {
+	return this.showcase.runSaleCycles();
+    }
+    
+    public Inventory getItemsOnSale() {
+	return this.showcase.getStuffOnSale();
+    }
+    
+    public Inventory getSoldItems() {
+	return this.showcase.getStuffSoldSinceLastCheck();
+    }
+    
+    public void transferBackroomToShowcase() {
+	showcase.addInventory(backroom);
+	backroom = new Inventory(100);
     }
 
     /**

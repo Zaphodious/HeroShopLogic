@@ -51,6 +51,8 @@ public final class EntityBuilder {
     private int experience = 100;
 
     private boolean rollStats = true;
+    
+    private Dice hitDice = Dice.D6;
 
     /**
      * Each Entity starts with a String name and an EntityType type.
@@ -189,6 +191,11 @@ public final class EntityBuilder {
 	return this;
 
     }
+    
+    public EntityBuilder setHitDice(Dice dice) {
+	this.hitDice = dice;
+	return this;
+    }
 
     String getName() {
 	return name;
@@ -244,6 +251,10 @@ public final class EntityBuilder {
 
     boolean rollStats() {
 	return rollStats;
+    }
+    
+    Dice hitDice() {
+	return this.hitDice;
     }
 
     /**

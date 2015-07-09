@@ -10,10 +10,10 @@ public class Inventory {
 
     private Map<Item, Integer> contents;
 
-    int maxWeight;
-    int currentWeight;
+    long maxWeight;
+    long currentWeight;
 
-    public Inventory(int maxWeight) {
+    public Inventory(long maxWeight) {
 	contents = ZaphUtil.newMap();
 	this.maxWeight = maxWeight;
     }
@@ -95,6 +95,11 @@ public class Inventory {
 	}
 	return toReturn;
     }
+    
+    public int getItemQuantity(Item item) {
+	
+	return (this.contents.containsKey(item)) ? this.contents.get(item) : 0;
+    }
 
     public int removeItem(Item item, int amount) {
 	int numberItemsRemoved = 0;
@@ -149,7 +154,7 @@ public class Inventory {
 	return true;
     }
 
-    public int getMaxWeight() {
+    public long getMaxWeight() {
 	return maxWeight;
     }
 
@@ -157,8 +162,16 @@ public class Inventory {
 	this.maxWeight = maxWeight;
     }
 
-    public int getCurrentWeight() {
+    public long getCurrentWeight() {
 	return currentWeight;
+    }
+    
+    public int getCurrentValue() {
+	int toReturn = 0;
+	for (Item item : this.contents.keySet()) {
+	    toReturn += item.getSaleValue() * this.contents.get(item);
+	}
+	return toReturn;
     }
 
     @Override

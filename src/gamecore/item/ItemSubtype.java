@@ -1,11 +1,11 @@
 package gamecore.item;
 
+import gamecore.adventure.UseMessage;
 import gamecore.entity.Attribute;
-import gamecore.entity.Entity;
 
 public interface ItemSubtype {
 
-    public int activate(Item item, Entity user, Entity target);
+    public UseMessage activate(UseEvent useEvent);
     
     public Attribute getRelevantAttribute();
     

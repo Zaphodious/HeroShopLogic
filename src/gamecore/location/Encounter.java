@@ -4,6 +4,7 @@ import gamecore.Inventory;
 import gamecore.ItemDrop;
 import gamecore.ZaphUtil;
 import gamecore.entity.Entity;
+import gamecore.entity.EntityBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +26,7 @@ public final class Encounter {
 	private boolean isCombat = false;
 	private boolean rewardsWithExperience = false;
 	private boolean rewardsWithItems = false;
-	private Entity entityToFight = null;
+	private EntityBuilder entityToFight = null;
 	private List<ItemDrop> itemReward = null;
 	private int expereinceReward = 0;
 	private String image = null;
@@ -49,8 +50,8 @@ public final class Encounter {
 	    return this;
 	}
 
-	public Builder setEntityToFight(Entity entity) {
-	    this.entityToFight = entity;
+	public Builder setEntityToFight(EntityBuilder entityBuilder) {
+	    this.entityToFight = entityBuilder;
 	    this.isCombat = true;
 	    return this;
 	}
@@ -69,6 +70,10 @@ public final class Encounter {
 
 	    return this;
 	}
+	
+	public int getLikelihood() {
+	    return this.likelihood;
+	}
 
 	public Encounter build() {
 	    return new Encounter(this);
@@ -79,7 +84,7 @@ public final class Encounter {
 	this.isCombat = builder.isCombat;
 	this.rewardsWithExperience = builder.rewardsWithExperience;
 	this.rewardsWithItems = builder.rewardsWithItems;
-	this.entityToFight = builder.entityToFight;
+	this.entityToFight = builder.entityToFight.build();
 	this.itemReward = builder.itemReward;
 	this.image = builder.image;
 	this.name = builder.name;
@@ -136,6 +141,7 @@ public final class Encounter {
     public int getExperienceReward() {
 	return this.experienceReward;
     }
+
 
     @Override
     public String toString() {

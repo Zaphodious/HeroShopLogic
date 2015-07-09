@@ -8,13 +8,13 @@ import java.util.List;
 
 public final class Area {
 
-    private List<Encounter> encounters;
+    private List<Encounter.Builder> encounters;
 
     int experienceLevel;
 
     public Area(int level) {
 
-	this.encounters = new ArrayList<Encounter>();
+	this.encounters = new ArrayList<Encounter.Builder>();
 	this.experienceLevel = Reference.WHAT_EXPERIENCE(level);
     }
 
@@ -26,12 +26,12 @@ public final class Area {
 	this(experienceLevel);
     }
 
-    public void addEncounter(Encounter encounter) {
-	this.encounters.add(encounter);
+    public void addEncounter(Encounter.Builder encounterBuilder) {
+	this.encounters.add(encounterBuilder);
     }
 
-    public void addEncounters(Encounter... encounters) {
-	for (Encounter encounter : encounters) {
+    public void addEncounters(Encounter.Builder... encounters) {
+	for (Encounter.Builder encounter : encounters) {
 	    this.addEncounter(encounter);
 	}
     }
@@ -39,9 +39,9 @@ public final class Area {
     public Encounter getRandomEncounter() {
 
 	while (true) {
-	    for (Encounter encounter : encounters) {
+	    for (Encounter.Builder encounter : encounters) {
 		if (encounter.getLikelihood() >= Dice.D100.roll()) {
-		    return encounter;
+		    return encounter.build();
 		}
 	    }
 	}

@@ -7,24 +7,28 @@ import gamecore.item.Item;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RoundInfoContainer {
+public final class RoundInfoContainer {
 
-    Entity attacker;
+    Entity user;
     Entity defender;
     Item itemUsed;
     Map<Attribute, Integer> toCheckAgainst;
     int amount;
 
-    public RoundInfoContainer(Entity attacker, Entity defender, Item itemUsed, int amount, Attribute... attributesUsed) {
-	this.attacker = attacker;
+    private RoundInfoContainer(Entity user, Entity defender, Item itemUsed, int amount, Attribute... attributesUsed) {
+	this.user = user;
 	this.defender = defender;
 	this.itemUsed = itemUsed;
 	this.toCheckAgainst = AttributeMapMaker.makeCheckMap(defender, attributesUsed);
 	this.amount = amount;
     }
+    
+    public static RoundInfoContainer newInstance(Entity attacker, Entity defender, Item itemUsed, int amount, Attribute... attributesUsed) {
+	return new RoundInfoContainer(attacker, defender, itemUsed, amount, attributesUsed);
+    }
 
     public boolean hasEntity() {
-	return (this.attacker != null);
+	return (this.user != null);
     }
 
     public boolean hasItem() {
@@ -35,8 +39,8 @@ public class RoundInfoContainer {
 	return (this.toCheckAgainst.isEmpty());
     }
 
-    public Entity getAttacker() {
-	return attacker;
+    public Entity getUser() {
+	return user;
     }
 
     public Entity getDefender() {

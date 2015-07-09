@@ -5,15 +5,15 @@ import java.util.List;
 
 public class RoundResult {
 
-    private List<CombatMessage> messages;
+    private List<UseMessage> messages;
 
     public RoundResult() {
-	messages = new ArrayList<CombatMessage>();
+	messages = new ArrayList<UseMessage>();
     }
 
     public String[] getMessagesOfType(MessageType messageType) {
 	List<String> toReturn = new ArrayList<String>();
-	for (CombatMessage message : messages) {
+	for (UseMessage message : messages) {
 	    if (message.getMessageType() == messageType) {
 		toReturn.add(message.getMessageString());
 	    }
@@ -24,7 +24,7 @@ public class RoundResult {
     public List<String> getAllMessages() {
 	List<String> toReturn = new ArrayList<String>();
 
-	for (CombatMessage message : messages) {
+	for (UseMessage message : messages) {
 	    toReturn.add(message.getMessageType().toString() + ": " + message.getMessageString());
 	}
 
@@ -32,7 +32,11 @@ public class RoundResult {
     }
 
     public void addMessage(MessageType messageType, String message) {
-	this.messages.add(new CombatMessage(messageType, message));
+	this.messages.add(UseMessage.newInstance(messageType, message));
+    }
+    
+    public void addMessage(UseMessage useMessage) {
+	this.messages.add(useMessage);
     }
 
     @Override

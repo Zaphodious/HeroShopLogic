@@ -12,33 +12,27 @@ import java.util.Random;
  */
 public enum Dice {
 
-    D10() {
-	@Override
-	public int roll() {
-	    return rand.nextInt(10) + 1;
-	}
-    },
-    D6() {
-	@Override
-	public int roll() {
-	    return rand.nextInt(6) + 1;
-	}
-    },
-    D3() {
-	@Override
-	public int roll() {
-	    return rand.nextInt(3) + 1;
-	}
-    },
-    D100() {
-	@Override
-	public int roll() {
-	    return rand.nextInt(100) + 1;
-	}
-    };
+    D10(10),
+    D8(8),
+    D12(12),
+    D6(6),
+    D4(4),
+    D3(3),
+    D20(20),
+    D2(2),
+    D100(100);
 
+    int sides;
     private static final Random rand = new Random();
+    
+    Dice(int sides) {
+	this.sides = sides;
+    }
+    
+    
 
-    public abstract int roll();
+    public int roll() {
+	return rand.nextInt(sides) + 1;
+    };
 
 }

@@ -15,7 +15,8 @@ public enum MessageType {
     GOLD_GAIN("gold drop"),
     EXPERIENCE_GAIN("experience drop"),
     WIN_MESSAGE("you won"),
-    LOSE_MESSAGE("you lose");
+    LOSE_MESSAGE("you lose"),
+    PLAYER_FEED("player eats");
 
     private String name;
 

@@ -7,6 +7,7 @@ package ui;
 
 import gamecore.Dice;
 import gamecore.GameController;
+import gamecore.Inventory;
 import gamecore.adventure.CombatCommand;
 import gamecore.adventure.CombatTag;
 import gamecore.adventure.Scene;
@@ -20,6 +21,7 @@ import gamecore.item.Weapon;
 import gamecore.location.Encounter;
 import gamecore.shop.Storefront;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -161,8 +163,10 @@ public class TextInterface {
 		break;
 	    case "2":
 		System.out.println("Adding a whole mess of items!");
-		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Short Sword", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setItemSubtype(BasicWeaponType.SWORD).setWeight(1).build());
+		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Flail", BasicItemType.WEAPON).setPotency(Dice.D3.roll()).setItemSubtype(BasicWeaponType.FLAIL).setWeight(1).build());
 		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Battle Axe", BasicItemType.WEAPON).setPotency(Dice.D6.roll()).setItemSubtype(BasicWeaponType.BATTLE_AXE).setWeight(1).build());
+		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Bow", BasicItemType.WEAPON).setPotency(Dice.D3.roll()).setItemSubtype(BasicWeaponType.BOW).setWeight(1).build());
+		
 		this.controller.getPlayerCharacter().getInventory().addItem(new ItemBuilder("Health Potion", BasicItemType.POTION).setCombatTags(CombatTag.USEABLE_FROM_INVENTORY, CombatTag.USEABLE_FROM_INVENTORY).setUseTag(UseTag.USABLE_ANYWHERE).setPotency(Dice.D6.roll()).setWeight(1).build(), Dice.D10.roll());
 
 		break;
@@ -220,9 +224,11 @@ public class TextInterface {
 	System.out.println(this.breakSpace);
 	Encounter encounter = this.controller.randomEncounter();
 	Scene scene = new Scene(this.controller.getPlayerCharacter(), encounter);
-	while (scene.stillOngoing()) {
-	    System.out.println("You went adventuring");
+	System.out.println("You went adventuring");
 	    System.out.println(scene.getEncounter().getDisplayLine());
+	
+	while (scene.stillOngoing()) {
+	    
 	    System.out.println("Enemy Health: " + scene.getEncounter().getEntityToFight().getAttribute(Attribute.CURRENT_HEALTH));
 	    System.out.println("Possible commands are:");
 	    List<CombatCommand> commands = scene.getCommands();
@@ -254,7 +260,7 @@ public class TextInterface {
 	    System.out.println("Time until next item: " + this.controller.getTestEmployee().secondsUntilNextChance());
 	    System.out.println("Shop Menu (alpha). Please select from the following items:");
 	    System.out.println("1:Wait a while, 2:Collect items, 3:Employee basket, 4:basket xFer to backroom, ");
-	    System.out.println("5:Backroom, 6: backroom xFer to showroom, 7: Check sales, e:Return to main menu");
+	    System.out.println("5:Backroom, 6: backroom xFer to showcase, 7: Check Showcase, e:Return to main menu");
 
 	    String input = getInput();
 
@@ -288,6 +294,32 @@ public class TextInterface {
 		Map<Item, Integer> backroom = Storefront.getInstance().getBackroom().getItemMap();
 		for (Item item : backroom.keySet()) {
 		    System.out.println(backroom.get(item) + "x " + item.toString());
+		}
+		break;
+	    case "6":
+		System.out.println("Transfering the backroom inventory to the Display Case...");
+		Storefront.getInstance().transferBackroomToShowcase();
+		System.out.println("Completed the operation without errors.");
+		break;
+	    case "7":
+		boolean hasStuffSold = Storefront.getInstance().hasAnythingSold();
+		System.out.println("Display Case contents are:");
+		Map<Item, Integer> itemsOnSale = Storefront.getInstance().getItemsOnSale().getItemMap();
+		for (Item item : itemsOnSale.keySet()) {
+		    System.out.println(itemsOnSale.get(item) + "x " + item.toString());
+		}
+		System.out.println("...");
+
+		if (hasStuffSold) {
+		    Inventory stuffThatHasSold = Storefront.getInstance().getSoldItems();
+		    Item[] itemsSold = stuffThatHasSold.getItems();
+		    System.out.println("Since the last time you've checked, " + stuffThatHasSold.numberOfItems() + " items have sold, totaling " + stuffThatHasSold.getCurrentValue() + " gold.");
+		    System.out.println("The items that have sold:");
+		    for (int i = 0; i < itemsSold.length; i++) {
+			System.out.println(stuffThatHasSold.getItemQuantity(itemsSold[i]) + "x " + itemsSold[i]);
+		    }
+		} else {
+		    System.out.println("Nothing has sold since the last time you've checked.");
 		}
 		break;
 	    case "e":

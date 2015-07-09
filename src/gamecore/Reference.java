@@ -2,16 +2,10 @@ package gamecore;
 
 import gamecore.adventure.CombatTag;
 import gamecore.entity.Attribute;
-import gamecore.entity.Entity;
 import gamecore.item.BasicItemType;
 import gamecore.item.BasicWeaponType;
-import gamecore.item.Item;
 import gamecore.item.ItemBuilder;
-import gamecore.item.ItemType;
 import gamecore.item.Weapon;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by achyt_000 on 6/24/2015.
@@ -45,7 +39,20 @@ public class Reference {
 	return (deadLevel - victorLevel) + 3;
     }
 
-    
+    public static Attribute GET_INVERSE_ATTRIBUTE(Attribute attribute) {
+
+	    switch (attribute) {
+	    case ATK_DEXTERITY:
+		return Attribute.DEF_DEXTERITY;
+	    case ATK_INTELLIGENCE:
+		return Attribute.DEF_INTELLIGENCE;
+	    case ATK_STRENGTH:
+		return Attribute.DEF_STRENGTH;
+	    default:
+		return attribute;
+
+	    }
+    }
 
     
 

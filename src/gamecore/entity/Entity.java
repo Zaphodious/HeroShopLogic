@@ -3,17 +3,11 @@ package gamecore.entity;
 import gamecore.Dice;
 import gamecore.Inventory;
 import gamecore.Reference;
-import gamecore.ZaphUtil;
-import gamecore.adventure.RoundInfoContainer;
+import gamecore.adventure.UseMessage;
 import gamecore.item.Armor;
 import gamecore.item.CombatUsable;
-import gamecore.item.Item;
 import gamecore.item.Weapon;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +33,8 @@ public final class Entity {
     private int salt;
 
     EntityType type;
+    
+    private Dice hitDice;
 
     Entity(EntityBuilder builder) {
 
@@ -49,6 +45,7 @@ public final class Entity {
 	this.weapon = builder.getWeapon();
 	this.armor = builder.getArmor();
 	this.type = builder.getType();
+	this.hitDice = builder.hitDice();
     }
 
     /**
@@ -233,37 +230,7 @@ public final class Entity {
 	return thisGuy.toString();
     }
 
-    public boolean successfullyHits(RoundInfoContainer roundInfo) {
-	// TODO: Change this so that each weapon determines if it hits or not,
-	// instead of the player.
-	int difficultyCheck = 10;
-	int defenderModifier = 0;
-	int attackerModifier = 0;
-	int numberOfAttributesUsed = 0;
-	List<Attribute> usedToCheck = new ArrayList<Attribute>();
-	if (roundInfo.hasAttributes()) {
-	    for (Attribute attribute : Attribute.values()) {
-		if (roundInfo.hasThisAttribute(attribute)) {
-		    numberOfAttributesUsed++;
-		    usedToCheck.add(attribute);
-		    defenderModifier += roundInfo.getValueForAttribute(attribute);
-		    attackerModifier += roundInfo.getAttacker().getAttribute(attribute);
-		}
-
-		if (defenderModifier > 0 && numberOfAttributesUsed > 1) {
-		    defenderModifier = defenderModifier / numberOfAttributesUsed;
-		    if (attackerModifier > 0) {
-			attackerModifier = attackerModifier / numberOfAttributesUsed;
-		    }
-		}
-
-	    }
-	}
-
-	difficultyCheck += defenderModifier;
-
-	return (difficultyCheck > Dice.D10.roll() + attackerModifier);
-    }
+    
 
     /**
      * Reduces the Entity's health by some amount, determined by using the
@@ -275,8 +242,8 @@ public final class Entity {
      *            takes.
      * @return The amount that the Entity was damaged, as an int.
      */
-    public int hurt(RoundInfoContainer damage) {
-	int toReturn = damage.getAmount();
+    public int hurt(Entity attacker, CombatUsable itemUsed, int amount, Attribute attributeEffected) {
+	int toReturn = amount;
 
 	/*
 	 * if (damage.hasAttributes()) { if (damage.hasEntity()) { for
@@ -301,7 +268,7 @@ public final class Entity {
      * @return The damage done to the attacked entity, as an int.
      */
 
-    public int attack(Entity entity) {
+    public UseMessage attack(Entity entity) {
 
 	return this.getWeapon().use(this, entity);
     }
@@ -319,7 +286,7 @@ public final class Entity {
      *         damage done, but it could be different if the CombatUsable item
      *         doesn't effect the target's health.
      */
-    public int attackUsing(Entity entity, CombatUsable combatUsable) {
+    public UseMessage attackUsing(Entity entity, CombatUsable combatUsable) {
 	return combatUsable.use(this, entity);
     }
 

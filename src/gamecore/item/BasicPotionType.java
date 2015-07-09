@@ -1,26 +1,26 @@
 package gamecore.item;
 
+import gamecore.adventure.MessageType;
+import gamecore.adventure.UseMessage;
 import gamecore.entity.Attribute;
-import gamecore.entity.Entity;
 
 public enum BasicPotionType implements ItemSubtype {
 
     HEALTH() {
 	@Override
-	public int activate(Item item, Entity user, Entity target) {
-	    Potion potion = (Potion) item;
-	    target.heal(potion.getPotency());
-	    return potion.potency;
+	public UseMessage activate(UseEvent useEvent) {
+	    Potion potion = (Potion) useEvent.getItemUsed();
+	    useEvent.getTarget().heal(potion.getPotency());
+	    return UseMessage.newInstance(MessageType.PLAYER_STAT_INCREASE, "You are healed for " + potion.getPotency());
 	}
-
-	
     };
 
-    public abstract int activate(Item item, Entity user, Entity target);
-    
+    public abstract UseMessage activate(UseEvent useEvent);
+
     @Override
-	public Attribute getRelevantAttribute() {
-	    return null;
-	}
+    public Attribute getRelevantAttribute() {
+	return Attribute.ATK_INTELLIGENCE;
+    }
+
 
 }

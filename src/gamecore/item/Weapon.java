@@ -1,6 +1,7 @@
 package gamecore.item;
 
 import gamecore.adventure.CombatTag;
+import gamecore.adventure.UseMessage;
 import gamecore.entity.Attribute;
 import gamecore.entity.Entity;
 
@@ -71,8 +72,8 @@ public final class Weapon extends AbstractItem implements CombatUsable {
      * This implementation of use() delates to the Weapon's WeaponType.
      */
     @Override
-    public int use(Entity user, Entity target) {
-	return this.subtype.activate(this, user, target);
+    public UseMessage use(Entity user, Entity target) {
+	return this.subtype.activate(UseEvent.newInstance(user, target, this, 1));
     }
 
     @Override

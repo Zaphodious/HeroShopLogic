@@ -20,5 +20,6 @@ public interface CombatUsable extends Usable {
      *         else false.
      */
     public boolean hasCombatTag(CombatTag tag);
+    
 
 }
