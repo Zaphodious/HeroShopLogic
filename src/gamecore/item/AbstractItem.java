@@ -11,6 +11,8 @@ package gamecore.item;
 
 public abstract class AbstractItem implements Item {
 
+    protected String ID;
+    
     protected String name;
     protected ItemType type;
 
@@ -31,13 +33,19 @@ public abstract class AbstractItem implements Item {
 	this.potency = builder.getPotency();
 	this.weight = builder.getWeight();
 	this.type = builder.getType();
+	this.ID = builder.getID();
     }
 
     @Override
     public boolean isStackable() {
 	return this.stackable;
     }
-
+    
+    @Override
+    public String getID() {
+	return this.ID;
+    }
+    
     @Override
     public String getName() {
 	return name;
@@ -56,7 +64,7 @@ public abstract class AbstractItem implements Item {
     @Override
     public int hashCode() {
 
-	return name.hashCode();
+	return this.ID.hashCode();
     }
 
     @Override

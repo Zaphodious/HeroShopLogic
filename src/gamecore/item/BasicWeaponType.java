@@ -94,4 +94,14 @@ public enum BasicWeaponType implements ItemSubtype {
 	return (roll > toCheckAgainst);
     }
 
+    
+    String name;
+    
+    BasicWeaponType(String name) {
+	this.name = name;
+    }
+
+    
+    
+    
 }

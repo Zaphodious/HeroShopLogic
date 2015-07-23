@@ -16,8 +16,19 @@ package gamecore.item;
 public interface Item {
 
     /**
-     * Each item has a name, which is used to determin it's identity. Each name
-     * should be unique.
+     * This is a unique code for each item, computed by the Builder unless given
+     * one before Item creation. This is <i>not</i> the database ID, though it
+     * is stored in the database. Although intended to be human-readable, it is
+     * not intended to be enough to reconstruct a given item. It is only to be
+     * used as an identifier.
+     * 
+     * @return this Item's ID String.
+     */
+    public String getID();
+
+    /**
+     * Each item has a name, which should be unique to avoid confusion and
+     * conflicts.
      * 
      * @return this Item's name as a String.
      */
@@ -40,7 +51,7 @@ public interface Item {
     public int getPotency();
 
     /**
-     * The Inventory uses the weight of all it's contained items to determine
+     * The Inventory uses the weight of all its contained items to determine
      * how full it is.
      * 
      * @return This Item's weight as an int.
@@ -78,5 +89,12 @@ public interface Item {
      *         in the player's shop.
      */
     public int getSaleDifficulty();
+
+    /**
+     * For items, the hashcode should be the hashcode of the ID string.
+     * 
+     * @return An integer unique to the item.
+     */
+    public int hashCode();
 
 }

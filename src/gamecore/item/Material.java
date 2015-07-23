@@ -9,6 +9,7 @@ package gamecore.item;
  */
 public final class Material implements Item {
 
+    private String ID;
     private String name;
     private ItemType type;
     private int potency;
@@ -72,5 +73,17 @@ public final class Material implements Item {
     public String toString() {
 	return "Material [name=" + name + "]";
     }
+
+    @Override
+    public String getID() {
+	return this.ID;
+    }
+
+    @Override
+    public int hashCode() {
+	return this.ID.hashCode();
+    }
+    
+    
 
 }

@@ -9,4 +9,5 @@ public interface ItemSubtype {
     
     public Attribute getRelevantAttribute();
     
+    
 }

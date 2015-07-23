@@ -58,6 +58,9 @@ public enum Attribute {
      * axes. Used in combat math to calculate if a strength-based weapon hits or
      * not.
      */
+    STRENGTH("strength"),
+    DEXTERITY("dexterity"),
+    INTELLIGENCE("intelligence"),
     ATK_STRENGTH("atk_strength"),
     /**
      * An Entity's relative accuracy with dexterity-based weapons like bows and

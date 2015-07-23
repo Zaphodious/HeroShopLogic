@@ -4,11 +4,13 @@ import gamecore.entity.Attribute;
 import gamecore.entity.Entity;
 import gamecore.entity.EntityBuilder;
 import gamecore.entity.EntityType;
+import gamecore.item.Item;
 import gamecore.location.Area;
 import gamecore.location.Encounter;
 import gamecore.shop.EmploymentPosition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,15 +22,12 @@ public final class GameController {
     private Entity sideKick;
     private List<Entity> employees;
     private Area testingArea;
-    EmploymentPosition testEmployee;
+    
+    private EmploymentPosition testEmployee;
 
     private GameController() {
-	playerCharacter = new EntityBuilder("Marco", EntityType.PLAYER_CHARACTER).statsToBuff(Attribute.ATK_STRENGTH).statsToNerf(Attribute.DEF_DEXTERITY).build();// new
-																				   // Hero(true,"Marco",
-																				   // 100,
-																				   // buffed,
-																				   // nerfed,
-																				   // EntityType.PLAYER_CHARACTER);
+	playerCharacter = new EntityBuilder("Marco", EntityType.PLAYER_CHARACTER).statsToBuff(Attribute.ATK_STRENGTH).statsToNerf(Attribute.DEF_DEXTERITY).build();
+	
 	this.sideKick = new EntityBuilder("Zabroni", EntityType.HERO).build();
 	setEmployees(new ArrayList<Entity>());
 	testingArea = new Area(1);
@@ -36,6 +35,7 @@ public final class GameController {
 
 	testingArea.addEncounters(new Encounter.Builder("Hark! A Goblin!").setEntityToFight(new EntityBuilder("Goblin", EntityType.MONSTER)).setExperienceReward(3),
 		new Encounter.Builder("Ew, a rat").setEntityToFight(new EntityBuilder("Rat", EntityType.MONSTER)).setExperienceReward(2).setLikelihood(50));
+	
     }
 
     public void nameThePlayer(String name) {
@@ -87,5 +87,7 @@ public final class GameController {
     public EmploymentPosition getTestEmployee() {
 	return testEmployee;
     }
+    
+    
 
 }

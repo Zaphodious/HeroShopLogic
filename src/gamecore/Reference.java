@@ -10,13 +10,26 @@ import gamecore.item.Weapon;
 /**
  * Created by achyt_000 on 6/24/2015.
  */
-public class Reference {
-
+public final class Reference {
+private Reference() {}
+    
     public static final Weapon DEFAULT_WEAPON = (Weapon) new ItemBuilder("Fists of Fury", BasicItemType.WEAPON).notStackable().setItemSubtype(BasicWeaponType.SHIV).setCombatTags(CombatTag.HARMS_OPPONENT).setPotency(1).build();
 
     public static final int DEFAULT_MAX_STACK_SIZE = 42000;
     private static final int XP_MULTIPLIER = 100;
+    
+    private static DBConversionHelper dbConv = DBConversionHelper.getInstance();
+    private static ItemBuilder itemBuilder = new ItemBuilder("Basic Sword", BasicItemType.WEAPON);
+    
+    
+    
 
+    public static void REG_ITEMS() {
+	Items.BASIC_SWORD = dbConv.addItem(itemBuilder.setPotency(2).setItemSubtype(BasicWeaponType.SWORD).setWeight(1).setCombatTags(CombatTag.HARMS_OPPONENT).build());
+	Items.BASIC_AXE = dbConv.addItem(itemBuilder.setName("Basic Axe").setItemSubtype(BasicWeaponType.BATTLE_AXE).build());
+	Items.DEFAULT_WEAPON = dbConv.addItem(DEFAULT_WEAPON);
+    }
+    
     public static int WHAT_LEVEL(int experience) {
 	return experience / Reference.XP_MULTIPLIER;
     }
@@ -54,6 +67,11 @@ public class Reference {
 	    }
     }
 
-    
+    public static final class Items {
+	private Items() {};
+	public static String BASIC_SWORD;
+	public static String BASIC_AXE;
+	public static String DEFAULT_WEAPON;
+    }
 
 }

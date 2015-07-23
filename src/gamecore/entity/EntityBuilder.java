@@ -305,6 +305,41 @@ public final class EntityBuilder {
 
 	for (Attribute attribute : Attribute.values()) {
 	    int stat = (random) ? Dice.D3.roll() + Dice.D3.roll() + Dice.D3.roll() : 6;
+	    	    
+	    
+	    switch (attribute) {
+	    
+	    case ATK_DEXTERITY: stat = toReturn.get(Attribute.DEXTERITY);
+		break;
+	    case ATK_INTELLIGENCE: stat = toReturn.get(Attribute.INTELLIGENCE);
+		break;
+	    case ATK_STRENGTH: stat = toReturn.get(Attribute.STRENGTH);
+		break;
+	    case CURRENT_HEALTH: stat = toReturn.get(Attribute.MAX_HEALTH);
+		break;
+	    case CURRENT_HUNGER: stat = toReturn.get(Attribute.MAX_HUNGER);
+		break;
+	    case CURRENT_MAGIC_POINTS: stat = toReturn.get(Attribute.MAX_MAGIC_POINTS);
+		break;
+	    case DEF_DEXTERITY: stat = toReturn.get(Attribute.DEXTERITY);
+		break;
+	    case DEF_INTELLIGENCE: stat = toReturn.get(Attribute.INTELLIGENCE);
+		break;
+	    case DEF_STRENGTH: stat = toReturn.get(Attribute.STRENGTH);
+		break;
+	    case EXPERIENCE: stat = experience;
+		break;
+	    case MAX_HEALTH: stat = Reference.WHAT_LEVEL(experience) * 7;
+		break;
+	    case MAX_HUNGER: stat = Reference.WHAT_LEVEL(experience) * 10;
+		break;
+	    case MAX_MAGIC_POINTS: stat = Reference.WHAT_LEVEL(experience) * 12;
+		break;
+	    default:
+		break;
+	    
+	    }
+	    
 	    if (buffed.contains(attribute)) {
 		System.out.println("buffed will be " + attribute.name());
 		stat += 1;
@@ -313,19 +348,6 @@ public final class EntityBuilder {
 	    if (nerfed.contains(attribute)) {
 		System.out.println("nerfed will be " + attribute.name());
 		stat -= 1;
-	    }
-
-	    if (attribute == Attribute.EXPERIENCE) {
-		stat = experience;
-	    } else if (attribute == Attribute.CURRENT_HEALTH) {
-		stat = toReturn.get(Attribute.MAX_HEALTH);
-	    } else if (attribute == Attribute.CURRENT_HUNGER) {
-		stat = toReturn.get(Attribute.MAX_HUNGER);
-	    } else if (attribute == Attribute.CURRENT_MAGIC_POINTS) {
-		stat = toReturn.get(Attribute.MAX_MAGIC_POINTS);
-	    } else {
-		// stat += level;
-
 	    }
 
 	    toReturn.put(attribute, stat);

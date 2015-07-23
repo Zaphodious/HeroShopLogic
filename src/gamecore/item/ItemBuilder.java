@@ -20,6 +20,8 @@ import java.util.Random;
  */
 public final class ItemBuilder {
 
+    private String ID = null;
+
     private String name;
     private ItemType type;
 
@@ -29,7 +31,7 @@ public final class ItemBuilder {
     private boolean stackable = true;
     private boolean combatUsable = false;
 
-    private int salt;
+    private int salt = 0;
     private boolean rollSalt = true;
     private List<CombatTag> combatTags = ZaphUtil.newList();
     private UseTag useTag = UseTag.USABLE_OUT_OF_COMBAT;
@@ -52,6 +54,20 @@ public final class ItemBuilder {
     public ItemBuilder(String name, ItemType type) {
 	this.name = name;
 	this.type = type;
+    }
+
+    /**
+     * An ID is automatically generated at build time, but may be passed in
+     * using this method instead. IDs are reset after every build.
+     * 
+     * @param ID
+     *            The string to be used as the next built item's ID
+     * @return This ItemBuilder instance, so that further setters can be
+     *         chained.
+     */
+    public ItemBuilder setID(String ID) {
+	this.ID = ID;
+	return this;
     }
 
     /**
@@ -87,8 +103,6 @@ public final class ItemBuilder {
     /**
      * Sets the potency for the new item. Potency is used by the item to
      * determine its effectiveness when used.</br> Note: Default potency is 1.
-     * This is only suitable for very basic items, and thus it is strongly
-     * recommended that this value be changed to something higher.
      * 
      * @param potency
      * @return This ItemBuilder instance, so that further setters can be
@@ -102,7 +116,8 @@ public final class ItemBuilder {
     /**
      * Sets the weight of the new item. Default is 2, which is appropriate for
      * most smaller items. For weapons and large items, it is suggested that
-     * this be changed to something more appropriate.
+     * this be changed to something more appropriate. For items of negligible
+     * weight, this value should be 0.
      * 
      * @param weight
      * @return This ItemBuilder instance, so that further setters can be
@@ -114,14 +129,25 @@ public final class ItemBuilder {
     }
 
     /**
-     * Calling this sets the item to be non-stackable. Note: there is no method
-     * provided for setting an item to stackable.
+     * Calling this sets the item to be non-stackable.
      * 
      * @return This ItemBuilder instance, so that further setters can be
      *         chained.
      */
     public ItemBuilder notStackable() {
 	this.stackable = false;
+	return this;
+    }
+
+    /**
+     * Calling this sets the item to be stackable, which is the default. This
+     * item is provided in case an ItemBuilder object is to be re-used.
+     * 
+     * @return This ItemBuilder instance, so that further setters can be
+     *         chained.
+     */
+    public ItemBuilder setStackable() {
+	this.stackable = true;
 	return this;
     }
 
@@ -183,17 +209,17 @@ public final class ItemBuilder {
      * @return This ItemBuilder instance, so that further setters can be
      *         chained.
      */
-    /*public ItemBuilder setWeaponType(WeaponType type) {
-	this.weaponType = type;
-	return this;
-    }*/
+    /*
+     * public ItemBuilder setWeaponType(WeaponType type) { this.weaponType =
+     * type; return this; }
+     */
 
-    
     public ItemBuilder setItemSubtype(ItemSubtype subtype) {
 	this.subtype = subtype;
 	this.hasSetSubtype = true;
 	return this;
     }
+
     /**
      * By default, potions will be set to BasicPotionType.HEALTH. This function
      * is used if a different PotionType is desired.
@@ -203,10 +229,10 @@ public final class ItemBuilder {
      * @return This ItemBuilder instance, so that further setters can be
      *         chained.
      */
-/*    public ItemBuilder setPotionType(PotionType type) {
-	this.potionType = type;
-	return this;
-    }*/
+    /*
+     * public ItemBuilder setPotionType(PotionType type) { this.potionType =
+     * type; return this; }
+     */
 
     /**
      * By default, an item will be set to Rarity.COMMON. If an alternate rarty
@@ -262,9 +288,9 @@ public final class ItemBuilder {
 	return type;
     }
 
-/*    public PotionType getPotionType() {
-	return potionType;
-    }*/
+    /*
+     * public PotionType getPotionType() { return potionType; }
+     */
 
     public int getPotency() {
 	return potency;
@@ -284,7 +310,7 @@ public final class ItemBuilder {
 
     public int getSalt() {
 	if (this.rollSalt) {
-	    return new Random().nextInt();
+	    salt = new Random().nextInt();
 	}
 	return salt;
     }
@@ -299,14 +325,14 @@ public final class ItemBuilder {
 	return this.useTag;
     }
 
-    /*WeaponType getWeaponType() {
-	return this.weaponType;
-    }*/
-    
+    /*
+     * WeaponType getWeaponType() { return this.weaponType; }
+     */
+
     public ItemSubtype getItemSubtype() {
 	return this.subtype;
     }
-    
+
     public boolean hasSetSubtype() {
 	return this.hasSetSubtype;
     }
@@ -323,6 +349,10 @@ public final class ItemBuilder {
 	return saleDifficulty;
     }
 
+    public String getID() {
+	return this.ID;
+    }
+
     /**
      * Calling this function builds the item. The actual instantiation is
      * delegated to the ItemType object provided in ItemBuilder's constructor.
@@ -332,7 +362,22 @@ public final class ItemBuilder {
      */
     public Item build() {
 
-	return type.newItemInstance(this);
+	if (this.ID == null) {
+	    String seperator = "/%/";
+	    StringBuilder idBuilder = new StringBuilder();
+	    idBuilder.append(getName() + seperator).append(this.type + seperator);
+	    if (this.hasSetSubtype) {
+		idBuilder.append(this.subtype + seperator);
+	    }
+	    idBuilder.append(this.combatTags.toString() + seperator);
+	    idBuilder.append(this.potency + seperator).append(this.weight + seperator);
+
+	    this.ID = idBuilder.toString();
+	}
+
+	Item toReturn = type.newItemInstance(this);
+	this.ID = null;
+	return toReturn;
     }
 
 }
